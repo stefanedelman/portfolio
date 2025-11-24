@@ -78,6 +78,7 @@ function scrollToSection(id) {
     display: flex;
     width: 50%;
     justify-content: space-around;
+    gap: 2rem;
     margin-top: 7rem;
 }
 
