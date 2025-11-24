@@ -29,11 +29,13 @@ const projects = ref([
 ]);
 
 const showText = () => {
-    window.dispatchEvent(new Event("show_lawcrative_text"));
+    window.dispatchEvent(new CustomEvent("show_particle_text", {
+        detail: { text: "LAWCRATIVE", layout: 'bottom' }
+    }));
 };
 
 const hideText = () => {
-    window.dispatchEvent(new Event("hide_lawcrative_text"));
+    window.dispatchEvent(new Event("hide_particle_text"));
 };
 </script>
 

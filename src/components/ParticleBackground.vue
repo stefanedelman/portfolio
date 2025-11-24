@@ -104,33 +104,53 @@ onMounted(() => {
   let isTextMode = false;
   let textTargets = []; // Array of {x, y}
 
-  window.addEventListener('show_lawcrative_text', () => {
+  window.addEventListener('show_particle_text', (e) => {
     isTextMode = true;
-    calculateTextTargets("LAWCRATIVE");
+    const { text, layout } = e.detail;
+    calculateTextTargets(text, layout);
   });
 
-  window.addEventListener('hide_lawcrative_text', () => {
+  window.addEventListener('hide_particle_text', () => {
     isTextMode = false;
   });
 
-  function calculateTextTargets(text) {
+  function calculateTextTargets(text, layout = 'bottom') {
     const offCanvas = document.createElement('canvas');
     const offCtx = offCanvas.getContext('2d');
     offCanvas.width = canvas.width;
     offCanvas.height = canvas.height;
 
-    offCtx.font = "900 150px Satoshi"; // Big bold text
     offCtx.fillStyle = "white";
     offCtx.textAlign = "center";
     offCtx.textBaseline = "middle";
 
-    // Draw text at bottom
-    offCtx.fillText(text, canvas.width / 2, canvas.height - 150);
+    if (layout === 'bottom') {
+      offCtx.font = "900 150px Satoshi";
+      offCtx.fillText(text, canvas.width / 2, canvas.height - 150);
+    } else if (layout === 'sides') {
+      // Render on Left and Right sides
+      // Use smaller font to fit
+      offCtx.font = "900 80px Satoshi";
+
+      // Left Side
+      offCtx.save();
+      offCtx.translate(canvas.width * 0.15, canvas.height / 2);
+      offCtx.rotate(-Math.PI / 2);
+      offCtx.fillText(text, 0, 0);
+      offCtx.restore();
+
+      // Right Side
+      offCtx.save();
+      offCtx.translate(canvas.width * 0.85, canvas.height / 2);
+      offCtx.rotate(Math.PI / 2);
+      offCtx.fillText(text, 0, 0);
+      offCtx.restore();
+    }
 
     const imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height).data;
     textTargets = [];
 
-    // Scan for pixels (step by 6 to reduce density and match grid roughly)
+    // Scan for pixels (step by 6 to reduce density)
     const step = 6;
     for (let y = 0; y < canvas.height; y += step) {
       for (let x = 0; x < canvas.width; x += step) {

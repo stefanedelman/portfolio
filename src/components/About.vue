@@ -19,7 +19,10 @@
                 <div class="skills-column">
                     <h3 class="skills-title">Tech Stack</h3>
                     <ul class="skills-list">
-                        <li v-for="skill in skills" :key="skill">{{ skill }}</li>
+                        <li v-for="skill in skills" :key="skill" @mouseenter="showSkillText(skill)"
+                            @mouseleave="hideSkillText">
+                            {{ skill }}
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -31,15 +34,27 @@
 import { ref } from 'vue';
 
 const skills = ref([
-    "Vue.js / Nuxt",
-    "React / Next.js",
-    "JavaScript (ES6+)",
-    "TypeScript",
-    "Node.js",
+    "Vue.js",
+    "Node / ExpressJS",
+    "Python",
+    "Flask",
+    "JavaScript",
     "HTML5 & CSS3",
-    "WebGL / Three.js",
-    "Git & CI/CD"
+    "MySQL",
+    "Git & CI/CD",
+    "PHP & Laravel",
+    "C# & .NET"
 ]);
+
+const showSkillText = (text) => {
+    window.dispatchEvent(new CustomEvent("show_particle_text", {
+        detail: { text: text, layout: 'sides' }
+    }));
+};
+
+const hideSkillText = () => {
+    window.dispatchEvent(new Event("hide_particle_text"));
+};
 </script>
 
 <style scoped>
