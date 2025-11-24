@@ -1,5 +1,5 @@
 <template>
-  <div class="controls">
+  <!-- <div class="controls">
     <div class="section-title">Grid Settings</div>
     <label>
       Grid Spacing: {{ gridSpacing }}px
@@ -65,7 +65,7 @@
       Noise: {{ noiseStrength }}
       <input type="range" min="1" max="50" v-model.number="noiseStrength">
     </label>
-  </div>
+  </div> -->
 
   <canvas ref="canvasEl"></canvas>
 </template>
@@ -94,6 +94,8 @@ let animationId;
 let particles = [];
 
 watch(gridSpacing, () => initGrid());
+
+
 
 window.addEventListener('resize', () => {
   if (canvasEl.value) {
@@ -147,6 +149,16 @@ function drawCircle(ctx, x, y, size) {
 }
 
 onMounted(() => {
+    window.addEventListener('excite_particles', () => {
+        noiseStrength.value *= 10
+        colorRingRadius.value /= 1.3
+
+    })
+    window.addEventListener('normalize_particles', () => {
+        noiseStrength.value /= 10
+        colorRingRadius.value *= 1.3
+    })
+
   const canvas = canvasEl.value;
   const ctx = canvas.getContext("2d", { alpha: false });
 
