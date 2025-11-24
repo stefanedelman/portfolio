@@ -1,72 +1,4 @@
 <template>
-  <!-- <div class="controls">
-    <div class="section-title">Grid Settings</div>
-    <label>
-      Grid Spacing: {{ gridSpacing }}px
-      <input type="range" min="15" max="100" step="1" v-model.number="gridSpacing">
-    </label>
-
-    <div class="divider"></div>
-
-    <div class="section-title">Visuals</div>
-    <label>
-      Base Size: {{ particleSize }}
-      <input type="range" min="1" max="12" step="0.5" v-model.number="particleSize">
-    </label>
-    <label>
-      Pill  length: {{ pillLength }}
-      <input type="range" min="1" max="20" v-model.number="pillLength">
-    </label>
-
-    <label>
-      Ring Radius: {{ colorRingRadius }}
-      <input type="range" min="50" max="600" v-model.number="colorRingRadius">
-    </label>
-
-    <label>
-      Ring Thickness: {{ colorRingThickness }}
-      <input type="range" min="10" max="200" v-model.number="colorRingThickness">
-    </label>
-    
-
-    <label>
-      Ring Wiggle: {{ ringWiggle }}
-      <input type="range" min="0" max="150" v-model.number="ringWiggle">
-    </label>
-
-    <label>
-      Particle Shape:
-      <select v-model="particleShape">
-        <option value="pill">Pill</option>
-        <option value="circle">Circle</option>
-        <option value="square">Square</option>
-      </select>
-    </label>
-
-    <div class="divider"></div>
-
-    <div class="section-title">Physics</div>
-    <label>
-      Repulsion Radius: {{ mouseRadius }}
-      <input type="range" min="0" max="500" v-model.number="mouseRadius">
-    </label>
-
-    <label>
-      Spring Tension: {{ spring }}
-      <input type="range" min="1" max="50" v-model.number="spring">
-    </label>
-    
-    <label>
-      Friction (Damping): {{ friction }}
-      <input type="range" min="50" max="98" v-model.number="friction">
-    </label>
-
-    <label>
-      Noise: {{ noiseStrength }}
-      <input type="range" min="1" max="50" v-model.number="noiseStrength">
-    </label>
-  </div> -->
-
   <canvas ref="canvasEl"></canvas>
 </template>
 
@@ -78,7 +10,7 @@ import { createNoise3D } from "simplex-noise";
 const gridSpacing = ref(25);
 const mouseRadius = ref(180);
 const spring = ref(2);
-const friction = ref(80); 
+const friction = ref(80);
 const noiseStrength = ref(15);
 
 const particleSize = ref(1);
@@ -95,8 +27,6 @@ let particles = [];
 
 watch(gridSpacing, () => initGrid());
 
-
-
 window.addEventListener('resize', () => {
   if (canvasEl.value) {
     canvasEl.value.width = window.innerWidth;
@@ -108,7 +38,7 @@ window.addEventListener('resize', () => {
 function initGrid() {
   if (!canvasEl.value) return;
   particles = [];
-  
+
   const spacing = gridSpacing.value;
   const cols = Math.ceil(canvasEl.value.width / spacing);
   const rows = Math.ceil(canvasEl.value.height / spacing);
@@ -137,7 +67,7 @@ function drawPill(ctx, x, y, angle, size, length) {
   ctx.translate(x, y);
   ctx.rotate(angle);
   ctx.beginPath();
-  ctx.roundRect(-length/2, -size, length, size*2, size);
+  ctx.roundRect(-length / 2, -size, length, size * 2, size);
   ctx.closePath();
   ctx.restore();
 }
@@ -149,15 +79,15 @@ function drawCircle(ctx, x, y, size) {
 }
 
 onMounted(() => {
-    window.addEventListener('excite_particles', () => {
-        noiseStrength.value *= 10
-        colorRingRadius.value /= 1.3
-
-    })
-    window.addEventListener('normalize_particles', () => {
-        noiseStrength.value /= 10
-        colorRingRadius.value *= 1.3
-    })
+  // === EVENT LISTENERS ===
+  window.addEventListener('excite_particles', () => {
+    noiseStrength.value *= 10
+    colorRingRadius.value /= 1.3
+  })
+  window.addEventListener('normalize_particles', () => {
+    noiseStrength.value /= 10
+    colorRingRadius.value *= 1.3
+  })
 
   const canvas = canvasEl.value;
   const ctx = canvas.getContext("2d", { alpha: false });
@@ -169,7 +99,49 @@ onMounted(() => {
 
   const noise3D = createNoise3D();
   let time = 0;
-  
+
+  // === TEXT MODE STATE ===
+  let isTextMode = false;
+  let textTargets = []; // Array of {x, y}
+
+  window.addEventListener('show_lawcrative_text', () => {
+    isTextMode = true;
+    calculateTextTargets("LAWCRATIVE");
+  });
+
+  window.addEventListener('hide_lawcrative_text', () => {
+    isTextMode = false;
+  });
+
+  function calculateTextTargets(text) {
+    const offCanvas = document.createElement('canvas');
+    const offCtx = offCanvas.getContext('2d');
+    offCanvas.width = canvas.width;
+    offCanvas.height = canvas.height;
+
+    offCtx.font = "900 150px Satoshi"; // Big bold text
+    offCtx.fillStyle = "white";
+    offCtx.textAlign = "center";
+    offCtx.textBaseline = "middle";
+
+    // Draw text at bottom
+    offCtx.fillText(text, canvas.width / 2, canvas.height - 150);
+
+    const imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height).data;
+    textTargets = [];
+
+    // Scan for pixels (step by 6 to reduce density and match grid roughly)
+    const step = 6;
+    for (let y = 0; y < canvas.height; y += step) {
+      for (let x = 0; x < canvas.width; x += step) {
+        const alpha = imageData[(y * canvas.width + x) * 4 + 3];
+        if (alpha > 128) {
+          textTargets.push({ x, y });
+        }
+      }
+    }
+  }
+
   const mouse = { x: -999, y: -999 };
   window.addEventListener("mousemove", (e) => {
     mouse.x = e.clientX;
@@ -178,7 +150,7 @@ onMounted(() => {
 
   function animate() {
     // Use a slightly transparent clear to create very subtle trails
-    ctx.fillStyle = "rgba(17, 17, 17, 0.6)"; 
+    ctx.fillStyle = "rgba(17, 17, 17, 0.6)";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     time += 0.005;
@@ -197,24 +169,40 @@ onMounted(() => {
     // === VISUAL CONFIG ===
     const outsideScale = 0.3;  // Size factor when outside
     const innerHoleScale = 0.15; // Size factor when inside the hole (tiny)
-    
+
     const dimAlpha = 0.15;     // Opacity when outside
     const brightAlpha = 1.0;   // Opacity when on ring or in hole
-    
+
     const lerpSpeed = 0.05;    // Transition speed
 
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
 
-      // --- 1. PHYSICS (Standard Spring/Repulsion) ---
-      const nX = noise3D(p.homeX * 0.01, p.homeY * 0.01, time) * nStr;
-      const nY = noise3D(p.homeX * 0.01 + 500, p.homeY * 0.01 + 500, time) * nStr;
-      const tx = p.homeX + nX;
-      const ty = p.homeY + nY;
+      let tx, ty;
+
+      // --- 1. PHYSICS (Standard vs Text Mode) ---
+      if (isTextMode && i < textTargets.length) {
+        // Move to text target
+        tx = textTargets[i].x;
+        ty = textTargets[i].y;
+
+        // Add slight noise wiggle to text so it feels alive
+        const nX = noise3D(tx * 0.01, ty * 0.01, time) * 2;
+        const nY = noise3D(tx * 0.01 + 500, ty * 0.01 + 500, time) * 2;
+        tx += nX;
+        ty += nY;
+
+      } else {
+        // Standard noise movement
+        const nX = noise3D(p.homeX * 0.01, p.homeY * 0.01, time) * nStr;
+        const nY = noise3D(p.homeX * 0.01 + 500, p.homeY * 0.01 + 500, time) * nStr;
+        tx = p.homeX + nX;
+        ty = p.homeY + nY;
+      }
 
       const dx = p.x - mouse.x;
       const dy = p.y - mouse.y;
-      const distSq = dx*dx + dy*dy;
+      const distSq = dx * dx + dy * dy;
       const dist = Math.sqrt(distSq);
 
       if (dist < mRadius) {
@@ -236,35 +224,39 @@ onMounted(() => {
       // State 0: Outside Far
       // State 1: On Ring
       // State 2: Inside Hole
-      let regionState = 0; 
+      let regionState = 0;
 
       // Optimization: Only calculate complex noise geometry if broadly within possibility
       if (dist < cRadius + cThick + wiggle + 100) {
         const angleToMouse = Math.atan2(dy, dx);
         const noiseVal = noise3D(
-          Math.cos(angleToMouse) * 1.5, 
-          Math.sin(angleToMouse) * 1.5, 
+          Math.cos(angleToMouse) * 1.5,
+          Math.sin(angleToMouse) * 1.5,
           time * 0.4
         );
-        
+
         // Calculate precise boundaries for this specific angle
         const localCenterRadius = cRadius + (noiseVal * wiggle);
-        const innerEdge = localCenterRadius - cThick/2;
-        const outerEdge = localCenterRadius + cThick/2;
-        
+        const innerEdge = localCenterRadius - cThick / 2;
+        const outerEdge = localCenterRadius + cThick / 2;
+
         if (dist < innerEdge) {
-            regionState = 2; // Inside Hole
+          regionState = 2; // Inside Hole
         } else if (dist >= innerEdge && dist <= outerEdge) {
-            regionState = 1; // On Ring
+          regionState = 1; // On Ring
         } else {
-            regionState = 0; // Outside
+          regionState = 0; // Outside
         }
       }
 
       // --- 3. DETERMINE TARGETS based on State ---
       let targetSize, targetAlpha;
 
-      if (regionState === 2) {
+      if (isTextMode && i < textTargets.length) {
+        // Text Mode: Bright and visible
+        targetSize = baseSize * 1.5;
+        targetAlpha = 1.0;
+      } else if (regionState === 2) {
         // Inside Hole: Tiny size, Bright opacity
         targetSize = baseSize * innerHoleScale * 2;
         targetAlpha = brightAlpha + 0.3;
@@ -277,14 +269,14 @@ onMounted(() => {
         targetSize = baseSize * outsideScale;
         targetAlpha = dimAlpha + 0.2;
       }
-      
+
       // --- 4. SMOOTH TRANSITIONS (Lerp independently) ---
       p.currentSize += (targetSize - p.currentSize) * lerpSpeed;
       p.currentAlpha += (targetAlpha - p.currentAlpha) * lerpSpeed;
 
       // --- 5. DRAW ---
       ctx.fillStyle = `rgba(158, 255, 237, ${p.currentAlpha})`;
-      
+
       // Ensure size doesn't go negative during fast transitions and is big enough to render
       const drawSize = Math.max(0.1, p.currentSize);
 
@@ -298,7 +290,7 @@ onMounted(() => {
         drawCircle(ctx, p.x, p.y, drawSize);
         ctx.fill();
       } else if (pShape === "square") {
-        ctx.fillRect(p.x - drawSize, p.y - drawSize, drawSize*2, drawSize*2);
+        ctx.fillRect(p.x - drawSize, p.y - drawSize, drawSize * 2, drawSize * 2);
       }
     }
 
@@ -312,83 +304,13 @@ onBeforeUnmount(() => cancelAnimationFrame(animationId));
 </script>
 
 <style scoped>
-
-
-html, body {
+html,
+body {
   background: #111;
   margin: 0;
 }
 
 canvas {
   display: block;
-}
-
-.controls {
-  position: fixed;
-  top: 10px;
-  left: 10px;
-  width: 240px;
-  max-height: 90vh;
-  overflow-y: auto;
-  background: rgba(20, 20, 20, 0.9);
-  padding: 15px;
-  border-radius: 8px;
-  color: #fff;
-  font-family: monospace;
-  border: 1px solid #444;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-  user-select: none;
-  z-index: 10;
-}
-
-/* Custom Scrollbar for controls */
-.controls::-webkit-scrollbar {
-  width: 6px;
-}
-.controls::-webkit-scrollbar-track {
-  background: #222;
-}
-.controls::-webkit-scrollbar-thumb {
-  background: #444;
-  border-radius: 3px;
-}
-
-.section-title {
-  font-size: 13px;
-  font-weight: bold;
-  color: #ff0055;
-  text-transform: uppercase;
-  margin-top: 5px;
-}
-
-.divider {
-  height: 1px;
-  background: #444;
-  margin: 5px 0;
-}
-
-label {
-  display: flex;
-  flex-direction: column;
-  font-size: 11px;
-  color: #bbb;
-}
-
-input[type="range"] {
-  margin-top: 5px;
-  cursor: grab;
-  accent-color: #ff0055; 
-}
-
-select {
-  background: #333;
-  color: white;
-  border: 1px solid #555;
-  margin-top: 5px;
-  padding: 4px;
-  border-radius: 4px;
 }
 </style>

@@ -3,7 +3,8 @@
         <h2 class="section-title">Selected Works</h2>
 
         <div class="projects-grid">
-            <div v-for="(project, index) in projects" :key="index" class="project-card">
+            <div v-for="(project, index) in projects" :key="index" class="project-card" @mouseenter="showText"
+                @mouseleave="hideText">
                 <div class="card-content">
                     <h3 class="project-title">{{ project.title }}</h3>
                     <p class="project-desc">{{ project.description }}</p>
@@ -23,9 +24,17 @@ const projects = ref([
     {
         title: "Lawcrative",
         description: "A modern legal technology platform designed to streamline case management and client communication for law firms.",
-        tags: ["Vue 3", "Node.js", "PostgreSQL"]
+        tags: ["Vue 3", "Expressjs", "MySQL"]
     }
 ]);
+
+const showText = () => {
+    window.dispatchEvent(new Event("show_lawcrative_text"));
+};
+
+const hideText = () => {
+    window.dispatchEvent(new Event("hide_lawcrative_text"));
+};
 </script>
 
 <style scoped>
