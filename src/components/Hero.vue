@@ -8,7 +8,7 @@
                 EDELMAN
             </div>
             <div class="title-part" style="margin-top: 6rem;">
-                SOFTWARE DEVELOPER
+                SOFTWARE ENGINEER
             </div>
         </div>
 

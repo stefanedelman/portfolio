@@ -15,6 +15,26 @@
                         functional
                         but also visually stunning and intuitive to use.
                     </p>
+                    <div class="social-links">
+                        <a @mouseover="isHover = true" @mouseleave="isHover = false"
+                            href="https://github.com/stefanedelman" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
+                            <span class="social-icon">→</span>
+                            <span>GitHub</span>
+                        </a>
+                        <a @mouseover="isHover = true" @mouseleave="isHover = false"
+                            href="https://linkedin.com/in/stefan-edelman" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
+                            <span class="social-icon">→</span>
+                            <span>LinkedIn</span>
+                        </a>
+                        <a @mouseover="isHover = true" @mouseleave="isHover = false"
+                            href="https://instagram.com/stefan_edelman" target="_blank" rel="noopener noreferrer"
+                            class="social-link">
+                            <span class="social-icon">→</span>
+                            <span>Instagram</span>
+                        </a>
+                    </div>
                 </div>
                 <div class="skills-column">
                     <h3 class="skills-title">Tech Stack</h3>
@@ -31,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const skills = ref([
     "Vue.js",
@@ -45,6 +65,18 @@ const skills = ref([
     "PHP & Laravel",
     "C# & .NET"
 ]);
+
+const isHover = ref(false)
+
+watch(isHover, (newVal) => {
+    if (newVal === true) {
+        window.dispatchEvent(new Event("excite_particles"))
+    }
+    else {
+        window.dispatchEvent(new Event("normalize_particles"))
+
+    }
+})
 
 const showSkillText = (text) => {
     window.dispatchEvent(new CustomEvent("show_particle_text", {
@@ -101,6 +133,43 @@ const hideSkillText = () => {
     line-height: 1.8;
     color: #ddd;
     margin-bottom: 2rem;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--primary-color);
+    border-radius: 50px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-family: "Satoshi", sans-serif;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.social-link:hover {
+    background: var(--primary-color);
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(158, 255, 237, 0.3);
+}
+
+.social-icon {
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.social-link:hover .social-icon {
+    transform: translateX(3px);
 }
 
 .skills-title {
