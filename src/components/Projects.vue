@@ -1,7 +1,7 @@
 <template>
     <div class="projects-container">
         <h2 class="section-title">Selected Works</h2>
-        
+
         <div class="projects-grid">
             <div v-for="(project, index) in projects" :key="index" class="project-card">
                 <div class="card-content">
@@ -21,19 +21,9 @@ import { ref } from 'vue';
 
 const projects = ref([
     {
-        title: "E-Commerce Dashboard",
-        description: "A real-time analytics dashboard for online retailers, featuring data visualization and inventory management.",
-        tags: ["Vue 3", "D3.js", "Firebase"]
-    },
-    {
-        title: "AI Image Generator",
-        description: "Web application that leverages stable diffusion models to generate unique artwork from text prompts.",
-        tags: ["React", "Python", "TensorFlow"]
-    },
-    {
-        title: "Crypto Portfolio Tracker",
-        description: "Mobile-first application for tracking cryptocurrency investments across multiple wallets and exchanges.",
-        tags: ["React Native", "Node.js", "Web3"]
+        title: "Lawcrative",
+        description: "A modern legal technology platform designed to streamline case management and client communication for law firms.",
+        tags: ["Vue 3", "Node.js", "PostgreSQL"]
     }
 ]);
 </script>
@@ -46,7 +36,8 @@ const projects = ref([
     flex-direction: column;
     justify-content: center;
     position: relative;
-    z-index: 1; /* Ensure it sits above background but below fixed overlays if any */
+    z-index: 1;
+    /* Ensure it sits above background but below fixed overlays if any */
 }
 
 .section-title {
@@ -86,8 +77,10 @@ const projects = ref([
     transform: translateY(-5px);
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--primary-color);
-    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2); /* Assuming we might add RGB var later, or just use hex opacity */
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.1); /* Fallback glow */
+    box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
+    /* Assuming we might add RGB var later, or just use hex opacity */
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+    /* Fallback glow */
 }
 
 .project-title {

@@ -1,20 +1,25 @@
-:root{
+:root {
   --primary-color: rgba(158, 255, 237, 1)
 }
 
-*{
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root {
+  --primary-color: rgba(158, 255, 237, 1)
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 @font-face {
   font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi/Satoshi-Black.otf") format("truetype");
+  src: url("/fonts/satoshi/Satoshi-Black.otf") format("opentype");
   font-weight: 900;
 }
+
 @font-face {
   font-family: "Satoshi";
-  src: url("/assets/fonts/satoshi/Satoshi-Regular.otf") format("truetype");
+  src: url("/fonts/satoshi/Satoshi-Regular.otf") format("opentype");
   font-weight: 400;
 }
