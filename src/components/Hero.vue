@@ -27,8 +27,42 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted, nextTick } from 'vue'
+import gsap from 'gsap'
+
 const isHover = ref(false)
+
+onMounted(async () => {
+    await nextTick();
+
+    const tl = gsap.timeline()
+    
+    tl.fromTo('.title-part', 
+        {
+            y: 100,
+            opacity: 0
+        },
+        {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.2,
+            ease: 'power4.out'
+        }
+    )
+    .fromTo('.buttons button', 
+        {
+            y: 50,
+            opacity: 0
+        },
+        {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: 'back.out(1.7)'
+        }, '-=0.5')
+})
 
 watch(isHover, (newVal) => {
     if (newVal === true) {

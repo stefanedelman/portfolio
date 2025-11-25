@@ -40,7 +40,11 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted, nextTick } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const form = reactive({
     name: '',
@@ -85,6 +89,63 @@ const submitForm = async () => {
         }, 5000);
     }, 1500);
 };
+
+onMounted(async () => {
+    await nextTick();
+
+    gsap.fromTo('.contact-container .section-title', 
+        {
+            y: 50,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.contact-container',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        }
+    );
+
+    gsap.fromTo('.subtitle', 
+        {
+            y: 30,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.contact-container',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            delay: 0.2,
+            ease: 'power3.out'
+        }
+    );
+
+    gsap.fromTo('.contact-form', 
+        {
+            y: 50,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.contact-container',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            delay: 0.4,
+            ease: 'power3.out'
+        }
+    );
+});
 </script>
 
 <style scoped>

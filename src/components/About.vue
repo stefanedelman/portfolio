@@ -54,7 +54,11 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { ref, watch, onMounted, nextTick } from 'vue';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const skills = ref([
     "Vue.js",
@@ -90,6 +94,81 @@ const showSkillText = (text) => {
 const hideSkillText = () => {
     window.dispatchEvent(new Event("hide_particle_text"));
 };
+
+onMounted(async () => {
+    await nextTick();
+
+    gsap.fromTo('.about-container .section-title', 
+        {
+            y: 50,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.about-container',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        }
+    );
+
+    gsap.fromTo('.profile-photo', 
+        {
+            scale: 0.8,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.about-content',
+                start: 'top 85%',
+            },
+            scale: 1,
+            opacity: 1,
+            duration: 1,
+            ease: 'back.out(1.7)'
+        }
+    );
+
+    gsap.fromTo('.bio', 
+        {
+            y: 30,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.about-content',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            stagger: 0.2,
+            delay: 0.2,
+            ease: 'power3.out'
+        }
+    );
+
+    gsap.fromTo('.skills-column', 
+        {
+            x: 50,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.about-content',
+                start: 'top 85%',
+            },
+            x: 0,
+            opacity: 1,
+            duration: 1,
+            delay: 0.4,
+            ease: 'power3.out'
+        }
+    );
+});
 </script>
 
 <style scoped>

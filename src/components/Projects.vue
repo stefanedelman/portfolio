@@ -4,7 +4,8 @@
 
         <div class="projects-grid">
             <div v-for="(project, index) in projects" :key="index" class="project-card" @mouseenter="showText"
-                @mouseleave="hideText" @mousemove="updateScreenshotPosition">
+                @mouseleave="hideText" @click="navigateToProject(project)">
+
                 <div class="card-content">
                     <h3 class="project-title">{{ project.title }}</h3>
                     <p class="project-desc">{{ project.description }}</p>
@@ -13,15 +14,12 @@
                     </div>
                 </div>
 
-                <!-- Screenshot Preview -->
-                <div v-if="showScreenshot && project.title === 'Lawcrative'" class="screenshot-preview"
-                    :style="{ left: screenshotX + 'px', top: screenshotY + 'px' }">
+                <div v-if="showScreenshot && project.title === 'Lawcrative'" class="screenshot-preview">
                     <img src="/placeholder-lawcrative.png" alt="Lawcrative Screenshot">
                 </div>
             </div>
         </div>
 
-        <!-- Custom Cursor -->
         <div v-if="showCustomCursor" class="custom-cursor" :style="{ left: cursorX + 'px', top: cursorY + 'px' }">
             Learn more
         </div>
@@ -29,26 +27,39 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, nextTick } from 'vue';
+import { useRouter } from 'vue-router';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+gsap.registerPlugin(ScrollTrigger);
+
+const router = useRouter();
 
 const projects = ref([
     {
         title: "Lawcrative",
         description: "A modern legal technology platform designed to streamline case management and client communication for law firms.",
-        tags: ["Vue 3", "Expressjs", "MySQL"]
+        tags: ["Vue 3", "Expressjs", "MySQL"],
+        slug: "lawcrative"
     }
 ]);
 
 const showScreenshot = ref(false);
-const screenshotX = ref(0);
-const screenshotY = ref(0);
+const showCustomCursor = ref(false);
 const cursorX = ref(0);
 const cursorY = ref(0);
-const showCustomCursor = ref(false);
+
+const navigateToProject = (project) => {
+    if (project.slug) {
+        router.push(`/project/${project.slug}`);
+    }
+};
 
 const showText = () => {
     showScreenshot.value = true;
     showCustomCursor.value = true;
+    // Dispatch event for your background particle system
     window.dispatchEvent(new CustomEvent("show_particle_text", {
         detail: { text: "LAWCRATIVE", layout: 'bottom' }
     }));
@@ -60,18 +71,54 @@ const hideText = () => {
     window.dispatchEvent(new Event("hide_particle_text"));
 };
 
-const updateScreenshotPosition = (event) => {
-    screenshotX.value = event.clientX + 20;
-    screenshotY.value = event.clientY + 20;
-};
-
+// Only track mouse for the custom cursor label
 const handleMouseMove = (event) => {
     cursorX.value = event.clientX;
     cursorY.value = event.clientY;
 };
 
-onMounted(() => {
+onMounted(async () => {
     document.addEventListener('mousemove', handleMouseMove);
+
+    await nextTick();
+
+    gsap.fromTo('.projects-container .section-title', 
+        {
+            y: 50,
+            opacity: 0
+        },
+        {
+            scrollTrigger: {
+                trigger: '.projects-container',
+                start: 'top 85%',
+            },
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: 'power3.out'
+        }
+    );
+
+    const cards = gsap.utils.toArray('.project-card');
+    cards.forEach((card, index) => {
+        gsap.fromTo(card, 
+            {
+                y: 50,
+                opacity: 0
+            },
+            {
+                scrollTrigger: {
+                    trigger: card,
+                    start: 'top 85%',
+                },
+                y: 0,
+                opacity: 1,
+                duration: 0.6,
+                delay: index * 0.1, // Manual stagger
+                ease: 'power3.out'
+            }
+        );
+    });
 });
 
 onUnmounted(() => {
@@ -103,7 +150,8 @@ onUnmounted(() => {
 .projects-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    gap: 4rem;
+    /* Increased gap slightly to make room for hover effects */
     width: 100%;
 }
 
@@ -121,7 +169,60 @@ onUnmounted(() => {
     flex-direction: column;
     justify-content: space-between;
     min-height: 250px;
+
+    /* Critical for absolute positioning the screenshot */
     position: relative;
+    z-index: 1;
+}
+
+/* Ensure the hovered card is on top of siblings so the popup isn't hidden */
+.project-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
+    z-index: 10;
+}
+
+/* THE UPDATED SCREENSHOT POSITIONING */
+.screenshot-preview {
+    position: absolute;
+    /* Move it above the card: 100% height + 20px gap */
+    bottom: calc(100% + 20px);
+    left: 0;
+
+    z-index: 20;
+    pointer-events: none;
+
+    /* Visual styles */
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 0.5rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+
+    /* Animation */
+    transform-origin: bottom left;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.9);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.screenshot-preview img {
+    width: 300px;
+    height: auto;
+    border-radius: 8px;
+    display: block;
 }
 
 .custom-cursor {
@@ -135,34 +236,9 @@ onUnmounted(() => {
     font-size: 0.9rem;
     font-weight: 600;
     z-index: 9999;
+    /* Centers cursor on mouse */
     transform: translate(-50%, -120%);
     white-space: nowrap;
-}
-
-.screenshot-preview {
-    position: fixed;
-    pointer-events: none;
-    z-index: 9998;
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid var(--primary-color);
-    border-radius: 12px;
-    padding: 0.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    transform: translate(0, 0);
-}
-
-.screenshot-preview img {
-    width: 300px;
-    height: auto;
-    border-radius: 8px;
-    display: block;
-}
-
-.project-card:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.08);
-    border-color: var(--primary-color);
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.1);
 }
 
 .project-title {

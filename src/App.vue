@@ -1,19 +1,43 @@
 <script setup>
-import Hero from './components/Hero.vue';
+import { onMounted, onUnmounted } from 'vue';
 import ParticleBackground from './components/ParticleBackground.vue';
-import Projects from './components/Projects.vue';
-import About from './components/About.vue';
-import Contact from './components/Contact.vue';
+import Lenis from 'lenis'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
+gsap.registerPlugin(ScrollTrigger)
+
+onMounted(() => {
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+    })
+
+    // Connect Lenis to ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update)
+
+    gsap.ticker.add((time) => {
+        lenis.raf(time * 1000)
+    })
+
+    gsap.ticker.lagSmoothing(0)
+    
+    // Force refresh after a short delay to ensure layout is settled
+    setTimeout(() => {
+        ScrollTrigger.refresh();
+    }, 500);
+});
 </script>
 
 <template>
     <ParticleBackground class="background" />
-    <Hero class="hero" />
-    <About />
-    <Projects id="projects" />
-    <Contact id="contact" />
-
+    <router-view />
 </template>
 
 <style scoped>
