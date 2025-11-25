@@ -27,6 +27,11 @@
                             Visit Live Site ↗
                         </a>
                     </div>
+                    
+                    <!-- Mobile Image 1 -->
+                    <div class="mobile-image" @click="openLightbox('/dashboard.png')">
+                        <img src="/dashboard.png" alt="Dashboard Preview">
+                    </div>
                 </div>
                 
                 <div class="scroll-section" data-index="1" :class="{ active: currentImageIndex === 1 }">
@@ -35,6 +40,11 @@
                         Legal professionals often struggle with fragmented systems for case management, billing, and client communication. 
                         The goal was to create a unified platform that handles all these aspects seamlessly while maintaining high security standards.
                     </p>
+                    
+                    <!-- Mobile Image 2 -->
+                    <div class="mobile-image" @click="openLightbox('/Client Management.png')">
+                        <img src="/Client Management.png" alt="Client Management">
+                    </div>
                 </div>
 
                 <div class="scroll-section" data-index="2" :class="{ active: currentImageIndex === 2 }">
@@ -43,6 +53,11 @@
                         We built a robust single-page application using Vue 3 for the frontend, ensuring a snappy and responsive user experience.
                         The backend is powered by Express.js, providing a scalable API architecture.
                     </p>
+                    
+                    <!-- Mobile Image 3 -->
+                    <div class="mobile-image" @click="openLightbox('/Calendar customization.png')">
+                        <img src="/Calendar customization.png" alt="Calendar Customization">
+                    </div>
                 </div>
 
                 <div class="scroll-section" data-index="3" :class="{ active: currentImageIndex === 3 }">
@@ -57,6 +72,11 @@
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
                         Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                     </p>
+                    
+                    <!-- Mobile Image 4 -->
+                    <div class="mobile-image" @click="openLightbox('/Promo Mobile.jpg')">
+                        <img src="/Promo Mobile.jpg" alt="Mobile View">
+                    </div>
                 </div>
             </div>
 
@@ -110,10 +130,15 @@ const closeLightbox = () => {
 };
 
 onMounted(async () => {
-    // Trigger particle text
-    window.dispatchEvent(new CustomEvent("show_particle_text", {
-        detail: { text: "LAWCRATIVE", layout: 'bottom' }
-    }));
+    // Trigger particle text only on desktop to avoid readability issues on mobile
+    if (window.innerWidth > 768) {
+        window.dispatchEvent(new CustomEvent("show_particle_text", {
+            detail: { text: "LAWCRATIVE", layout: 'bottom' }
+        }));
+    } else {
+        // Explicitly hide any existing text on mobile
+        window.dispatchEvent(new Event("hide_particle_text"));
+    }
 
     await nextTick();
 
@@ -335,29 +360,76 @@ onUnmounted(() => {
     display: block;
 }
 
+.mobile-image {
+    display: none;
+}
+
 @media (max-width: 768px) {
+    .project-page {
+        padding-top: 80px;
+    }
+
     .content-container {
         grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 0 1.5rem;
     }
-    
-    .image-wrapper {
-        position: relative;
-        top: 0;
-        height: auto;
-        margin-bottom: 2rem;
+
+    .back-button {
+        top: 1.5rem;
+        left: 1.5rem;
+        padding: 0.4rem 0.8rem;
+        font-size: 1rem;
     }
-    
-    .project-image {
-        position: relative;
-        opacity: 1;
-        transform: none;
-        margin-bottom: 1rem;
+
+    .text-column {
+        padding-top: 0;
+        padding-bottom: 2rem;
     }
-    
+
+    .project-title {
+        font-size: 3rem;
+    }
+
+    .project-logo {
+        height: 80px;
+    }
+
     .scroll-section {
         min-height: auto;
-        margin-bottom: 4rem;
-        opacity: 1;
+        margin-bottom: 3rem;
+        opacity: 1; /* Always visible on mobile */
+        padding: 0;
+    }
+
+    .scroll-section h3 {
+        font-size: 1.8rem;
+    }
+
+    .scroll-section p, .scroll-section ul {
+        font-size: 1.1rem;
+    }
+
+    /* Hide the desktop image column on mobile */
+    .image-column {
+        display: none;
+    }
+    
+    /* Show and style the mobile images */
+    .mobile-image {
+        display: block;
+        width: 100%;
+        margin-top: 2rem;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .mobile-image img {
+        width: 100%;
+        height: auto;
+        display: block;
     }
 }
 

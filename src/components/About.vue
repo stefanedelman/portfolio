@@ -246,6 +246,7 @@ onMounted(async () => {
     display: flex;
     gap: 1rem;
     margin-top: 2rem;
+    flex-wrap: wrap;
 }
 
 .social-link {
@@ -326,11 +327,11 @@ onMounted(async () => {
     }
 
     .about-container {
-        padding: 4rem 2rem;
+        padding: 4rem 1rem;
     }
 
     .content-wrapper {
-        padding: 2rem;
+        padding: 1.5rem;
     }
 }
 </style>

@@ -57,7 +57,8 @@ function initGrid() {
         // We now transition size and opacity independently
         currentSize: 0,
         currentAlpha: 0,
-        textTarget: null
+        textTarget: null,
+        twinkleTimer: 0
       });
     }
   }
@@ -332,6 +333,18 @@ onMounted(() => {
         // Outside: Medium size, Dim opacity
         targetSize = baseSize * outsideScale;
         targetAlpha = dimAlpha + 0.2;
+
+        // Twinkle Logic (Randomly brighten particles to simulate life, especially on mobile)
+        if (p.twinkleTimer > 0) {
+            p.twinkleTimer--;
+            targetAlpha = brightAlpha; 
+            targetSize = baseSize * 0.8; // Slightly larger than normal outside state
+        } else {
+            // Random chance to start twinkling (approx 1 in 2000 per frame)
+            if (Math.random() < 0.0005) { 
+                p.twinkleTimer = Math.random() * 60 + 30; // 0.5 to 1.5 seconds
+            }
+        }
       }
 
       // --- 4. SMOOTH TRANSITIONS (Lerp independently) ---

@@ -137,6 +137,8 @@ onMounted(async () => {
 
 onUnmounted(() => {
     document.removeEventListener('mousemove', handleMouseMove);
+    // Ensure text is hidden when leaving the component
+    window.dispatchEvent(new Event("hide_particle_text"));
 });
 </script>
 
@@ -314,4 +316,42 @@ onUnmounted(() => {
     border-radius: 50px;
     background: rgba(0, 0, 0, 0.2);
 }
+
+@media (max-width: 768px) {
+    .projects-container {
+        padding: 4rem 1rem;
+    }
+
+    .project-card {
+        flex-direction: column-reverse;
+        align-items: center;
+        padding: 1.5rem;
+    }
+
+    .card-content {
+        padding-right: 0;
+        width: 100%;
+    }
+
+    .project-logo {
+        margin-left: 0;
+        margin-bottom: 1.5rem;
+        width: 100%;
+        height: auto; /* Reset height */
+        justify-content: center;
+    }
+
+    .project-logo img {
+        height: auto;
+        width: 100%;
+        max-width: 100%;
+        max-height: 200px;
+        object-fit: contain;
+    }
+    
+    .section-title {
+        margin-bottom: 4rem; /* Increase spacing on mobile */
+    }
+}
+
 </style>
