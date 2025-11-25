@@ -4,6 +4,9 @@
             <h2 class="section-title">About Me</h2>
             <div class="about-content">
                 <div class="text-column">
+                    <div class="profile-photo">
+                        <img src="/placeholder-profile.png" alt="Stefan Edelman">
+                    </div>
                     <p class="bio">
                         Hello! I'm Stefan, a passionate software developer with a knack for creating immersive digital
                         experiences.
@@ -125,6 +128,23 @@ const hideSkillText = () => {
     display: grid;
     grid-template-columns: 1.5fr 1fr;
     gap: 4rem;
+}
+
+.profile-photo {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 2rem;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 20px rgba(158, 255, 237, 0.3);
+}
+
+.profile-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .bio {
