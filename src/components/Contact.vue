@@ -26,7 +26,8 @@
                     <span class="error-msg" v-if="errors.message">{{ errors.message }}</span>
                 </div>
 
-                <button type="submit" class="submit-btn" :disabled="isSubmitting">
+                <button @mouseover="isHover = true" @mouseleave="isHover = false" type="submit" class="submit-btn"
+                    :disabled="isSubmitting">
                     <span v-if="!isSubmitting">Send Message</span>
                     <span v-else>Sending...</span>
                 </button>
@@ -40,7 +41,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick } from 'vue';
+import { ref, reactive, onMounted, nextTick, watch } from 'vue';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import emailjs from '@emailjs/browser';
@@ -123,6 +124,18 @@ const submitForm = async () => {
         isSubmitting.value = false;
     }
 };
+
+const isHover = ref(false);
+
+watch(isHover, (newVal) => {
+    if (newVal === true) {
+        window.dispatchEvent(new Event("excite_particles"))
+    }
+    else {
+        window.dispatchEvent(new Event("normalize_particles"))
+
+    }
+})
 
 onMounted(async () => {
     await nextTick();

@@ -3,7 +3,7 @@
         <div class="back-button" @click="$router.push('/')">
             ← Back
         </div>
-        
+
         <div class="content-container">
             <!-- Left Column: Scrollable Text -->
             <div class="text-column">
@@ -18,29 +18,33 @@
                         <span class="tag">MySQL</span>
                     </div>
                     <p>
-                        Lawcrative is a modern legal technology platform designed to streamline case management and client communication for law firms.
+                        Lawcrative is a modern legal technology platform designed to streamline case management and
+                        client communication for law firms.
                         It provides a comprehensive suite of tools for lawyers to manage their practice efficiently.
                     </p>
-                    
+
                     <div class="project-actions">
-                        <a href="https://www.lawcrative.com" target="_blank" rel="noopener noreferrer" class="visit-btn">
+                        <a href="https://www.lawcrative.com" target="_blank" rel="noopener noreferrer"
+                            class="visit-btn">
                             Visit Live Site ↗
                         </a>
                     </div>
-                    
+
                     <!-- Mobile Image 1 -->
                     <div class="mobile-image" @click="openLightbox('/dashboard.png')">
                         <img src="/dashboard.png" alt="Dashboard Preview">
                     </div>
                 </div>
-                
+
                 <div class="scroll-section" data-index="1" :class="{ active: currentImageIndex === 1 }">
                     <h3>The Challenge</h3>
                     <p>
-                        Legal professionals often struggle with fragmented systems for case management, billing, and client communication. 
-                        The goal was to create a unified platform that handles all these aspects seamlessly while maintaining high security standards.
+                        Legal professionals often struggle with fragmented systems for case management, billing, and
+                        client communication.
+                        The goal was to create a unified platform that handles all these aspects seamlessly while
+                        maintaining high security standards.
                     </p>
-                    
+
                     <!-- Mobile Image 2 -->
                     <div class="mobile-image" @click="openLightbox('/Client Management.png')">
                         <img src="/Client Management.png" alt="Client Management">
@@ -50,10 +54,11 @@
                 <div class="scroll-section" data-index="2" :class="{ active: currentImageIndex === 2 }">
                     <h3>The Solution</h3>
                     <p>
-                        We built a robust single-page application using Vue 3 for the frontend, ensuring a snappy and responsive user experience.
+                        We built a robust single-page application using Vue 3 for the frontend, ensuring a snappy and
+                        responsive user experience.
                         The backend is powered by Express.js, providing a scalable API architecture.
                     </p>
-                    
+
                     <!-- Mobile Image 3 -->
                     <div class="mobile-image" @click="openLightbox('/Calendar customization.png')">
                         <img src="/Calendar customization.png" alt="Calendar Customization">
@@ -68,11 +73,8 @@
                         <li>Client portal for easy communication</li>
                         <li>Automated billing and invoicing</li>
                     </ul>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-                        Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                    </p>
-                    
+
+
                     <!-- Mobile Image 4 -->
                     <div class="mobile-image" @click="openLightbox('/Promo Mobile.jpg')">
                         <img src="/Promo Mobile.jpg" alt="Mobile View">
@@ -83,10 +85,8 @@
             <!-- Right Column: Sticky Images -->
             <div class="image-column">
                 <div class="image-wrapper">
-                    <div v-for="(img, index) in images" :key="index" 
-                         class="project-image"
-                         :class="[{ active: currentImageIndex === index }, img.type]"
-                         @click="openLightbox(img.src)">
+                    <div v-for="(img, index) in images" :key="index" class="project-image"
+                        :class="[{ active: currentImageIndex === index }, img.type]" @click="openLightbox(img.src)">
                         <img :src="img.src" :alt="`Project screenshot ${index + 1}`">
                     </div>
                 </div>
@@ -193,7 +193,7 @@ onUnmounted(() => {
     font-size: 1.2rem;
     z-index: 100;
     padding: 0.5rem 1rem;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 8px;
     backdrop-filter: blur(5px);
     transition: all 0.3s ease;
@@ -219,13 +219,15 @@ onUnmounted(() => {
 }
 
 .scroll-section {
-    min-height: 50vh; /* Reduced from 80vh to bring content closer */
+    min-height: 50vh;
+    /* Reduced from 80vh to bring content closer */
     display: flex;
     flex-direction: column;
     justify-content: center;
     opacity: 0.3;
     transition: opacity 0.5s ease;
-    padding: 2rem 0; /* Add some padding for breathing room but keep sections closer */
+    padding: 2rem 0;
+    /* Add some padding for breathing room but keep sections closer */
 }
 
 /* Highlight the active section text too? Optional but nice */
@@ -302,7 +304,8 @@ onUnmounted(() => {
     font-size: 2.2rem;
 }
 
-.scroll-section p, .scroll-section ul {
+.scroll-section p,
+.scroll-section ul {
     font-family: "Satoshi", sans-serif;
     font-size: 1.35rem;
     line-height: 1.8;
@@ -330,8 +333,8 @@ onUnmounted(() => {
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     cursor: zoom-in;
 }
 
@@ -343,7 +346,8 @@ onUnmounted(() => {
 
 .project-image.portrait {
     width: auto;
-    height: 80%; /* Make portrait images tall but not too wide */
+    height: 80%;
+    /* Make portrait images tall but not too wide */
     max-height: 700px;
 }
 
@@ -398,7 +402,8 @@ onUnmounted(() => {
     .scroll-section {
         min-height: auto;
         margin-bottom: 3rem;
-        opacity: 1; /* Always visible on mobile */
+        opacity: 1;
+        /* Always visible on mobile */
         padding: 0;
     }
 
@@ -406,7 +411,8 @@ onUnmounted(() => {
         font-size: 1.8rem;
     }
 
-    .scroll-section p, .scroll-section ul {
+    .scroll-section p,
+    .scroll-section ul {
         font-size: 1.1rem;
     }
 
@@ -414,7 +420,7 @@ onUnmounted(() => {
     .image-column {
         display: none;
     }
-    
+
     /* Show and style the mobile images */
     .mobile-image {
         display: block;
@@ -422,8 +428,8 @@ onUnmounted(() => {
         margin-top: 2rem;
         border-radius: 12px;
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        border: 1px solid rgba(255,255,255,0.1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .mobile-image img {
@@ -459,7 +465,7 @@ onUnmounted(() => {
     max-height: 90vh;
     object-fit: contain;
     border-radius: 8px;
-    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .close-btn {
@@ -482,7 +488,12 @@ onUnmounted(() => {
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 </style>

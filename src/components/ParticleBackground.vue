@@ -17,7 +17,7 @@ const particleSize = ref(1);
 const pillLength = ref(5);
 
 const colorRingRadius = ref(250);
-const colorRingThickness = ref(75);
+const colorRingThickness = ref(85);
 const ringWiggle = ref(20);
 const particleShape = ref("pill");
 
