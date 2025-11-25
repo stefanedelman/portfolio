@@ -333,6 +333,9 @@ onMounted(async () => {
     font-size: 0.9rem;
     background: rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .skills-list li:hover {

@@ -264,6 +264,7 @@ textarea {
     font-size: 1rem;
     transition: all 0.3s ease;
     outline: none;
+    resize: vertical;
 }
 
 input:focus,
