@@ -57,7 +57,7 @@ onMounted(() => {
     })
 
     gsap.ticker.lagSmoothing(0)
-    
+
     // Force refresh after a short delay to ensure layout is settled
     setTimeout(() => {
         ScrollTrigger.refresh();
@@ -68,14 +68,11 @@ onMounted(() => {
 <template>
     <ScrollProgress :progress="scrollProgress" />
     <ParticleBackground class="background" />
-    <router-view />
-    
-    <button 
-        class="scroll-to-top" 
-        :class="{ 'visible': showScrollTop }" 
-        @click="scrollToTop"
-        aria-label="Scroll to top"
-    >
+    <main class="main-content">
+        <router-view />
+    </main>
+
+    <button class="scroll-to-top" :class="{ 'visible': showScrollTop }" @click="scrollToTop" aria-label="Scroll to top">
         ↑
     </button>
 </template>
@@ -85,7 +82,13 @@ onMounted(() => {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: -1000;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.main-content {
+    position: relative;
+    z-index: 1;
 }
 
 .scroll-to-top {
@@ -108,7 +111,7 @@ onMounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .scroll-to-top.visible {
