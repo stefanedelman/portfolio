@@ -23,6 +23,11 @@
                     @click="scrollToSection('contact')">
                     Contact Me
                 </button>
+
+                <a href="/Stefan Vladislav Edelman CV.pdf" download class="button2" @mouseover="isHover = true"
+                    @mouseleave="isHover = false">
+                    Download CV
+                </a>
             </div>
         </div>
 
@@ -48,7 +53,7 @@ onMounted(async () => {
 
     if (isMobile) {
         // Mobile Sequence: Image (Top) -> Text -> Buttons
-        tl.fromTo('.hero-image', 
+        tl.fromTo('.hero-image',
             {
                 y: 50,
                 opacity: 0,
@@ -62,34 +67,34 @@ onMounted(async () => {
                 ease: 'power3.out'
             }
         )
-        .fromTo('.title-part', 
-            {
-                y: 50,
-                opacity: 0
-            },
-            {
-                y: 0,
-                opacity: 1,
-                duration: 1,
-                stagger: 0.2,
-                ease: 'power4.out'
-            }, '-=0.8'
-        )
-        .fromTo('.buttons button', 
-            {
-                y: 30,
-                opacity: 0
-            },
-            {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'back.out(1.7)'
-            }, '-=0.6')
+            .fromTo('.title-part',
+                {
+                    y: 50,
+                    opacity: 0
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 1,
+                    stagger: 0.2,
+                    ease: 'power4.out'
+                }, '-=0.8'
+            )
+            .fromTo('.buttons > *',
+                {
+                    y: 30,
+                    opacity: 0
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'back.out(1.7)'
+                }, '-=0.6')
     } else {
         // Desktop Sequence: Text -> Buttons -> Image (Side)
-        tl.fromTo('.title-part', 
+        tl.fromTo('.title-part',
             {
                 y: 100,
                 opacity: 0
@@ -102,31 +107,31 @@ onMounted(async () => {
                 ease: 'power4.out'
             }
         )
-        .fromTo('.buttons button', 
-            {
-                y: 50,
-                opacity: 0
-            },
-            {
-                y: 0,
-                opacity: 1,
-                duration: 0.8,
-                stagger: 0.1,
-                ease: 'back.out(1.7)'
-            }, '-=0.5')
-        .fromTo('.hero-image', 
-            {
-                x: 100,
-                opacity: 0,
-                scale: 0.9
-            },
-            {
-                x: 0,
-                opacity: 1,
-                scale: 1,
-                duration: 1.2,
-                ease: 'power3.out'
-            }, '-=0.8')
+            .fromTo('.buttons > *',
+                {
+                    y: 50,
+                    opacity: 0
+                },
+                {
+                    y: 0,
+                    opacity: 1,
+                    duration: 0.8,
+                    stagger: 0.1,
+                    ease: 'back.out(1.7)'
+                }, '-=0.5')
+            .fromTo('.hero-image',
+                {
+                    x: 100,
+                    opacity: 0,
+                    scale: 0.9
+                },
+                {
+                    x: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1.2,
+                    ease: 'power3.out'
+                }, '-=0.8')
     }
 })
 
@@ -181,7 +186,7 @@ function scrollToSection(id) {
     max-width: 500px;
     height: auto;
     border-radius: 24px;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(158, 255, 237, 0.2);
     transition: all 0.5s ease;
     object-fit: cover;
@@ -226,6 +231,10 @@ function scrollToSection(id) {
     cursor: pointer;
     transition: all 0.3s ease;
     white-space: nowrap;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .buttons .button1:hover,
@@ -257,12 +266,11 @@ function scrollToSection(id) {
         justify-content: center;
         flex-wrap: wrap;
     }
-    
+
     .buttons .button1,
     .buttons .button2 {
         padding: 1.5rem 3rem;
         font-size: 1.5rem;
     }
 }
-
 </style>

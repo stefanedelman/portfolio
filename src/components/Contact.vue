@@ -127,7 +127,7 @@ const submitForm = async () => {
 onMounted(async () => {
     await nextTick();
 
-    gsap.fromTo('.contact-container .section-title', 
+    gsap.fromTo('.contact-container .section-title',
         {
             y: 50,
             opacity: 0
@@ -144,11 +144,10 @@ onMounted(async () => {
         }
     );
 
-    gsap.fromTo('.subtitle', 
-        {
-            y: 30,
-            opacity: 0
-        },
+    gsap.fromTo('.subtitle', {
+        y: 30,
+        opacity: 0
+    },
         {
             scrollTrigger: {
                 trigger: '.contact-container',
@@ -162,7 +161,7 @@ onMounted(async () => {
         }
     );
 
-    gsap.fromTo('.contact-form', 
+    gsap.fromTo('.contact-form',
         {
             y: 50,
             opacity: 0
@@ -275,24 +274,26 @@ textarea.error {
 
 .submit-btn {
     margin-top: 1rem;
-    padding: 1rem;
-    background: rgba(158, 255, 237, 0.1);
+    padding: 1.5rem 4rem;
+    background: rgba(255, 255, 255, 0.03);
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
-    border-radius: 50px;
+    border-radius: 16px;
     font-family: "Satoshi", sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
+    font-weight: 600;
+    font-size: 1.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
     backdrop-filter: blur(5px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    align-self: center;
 }
 
 .submit-btn:hover:not(:disabled) {
     background: var(--primary-color);
     color: #000;
-    transform: translateY(-2px);
-    box-shadow: 0 0 20px rgba(158, 255, 237, 0.3);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(158, 255, 237, 0.3);
 }
 
 .submit-btn:disabled {
