@@ -3,7 +3,7 @@
         <h2 class="section-title">Selected Works</h2>
 
         <div class="projects-grid">
-            <div v-for="(project, index) in projects" :key="index" class="project-card" @mouseenter="showText"
+            <div v-for="(project, index) in projects" :key="index" class="project-card" @mouseenter="showText(project)"
                 @mouseleave="hideText" @click="navigateToProject(project)">
 
                 <div class="card-content">
@@ -13,9 +13,13 @@
                         <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <div v-if="showScreenshot && project.title === 'Lawcrative'" class="screenshot-preview">
-                    <img src="/placeholder-lawcrative.png" alt="Lawcrative Screenshot">
+        <div v-if="hoveredProject && hoveredProject.images" class="project-preview-overlay">
+            <div class="preview-images">
+                <div v-for="(img, idx) in hoveredProject.images.slice(0, 3)" :key="idx" class="preview-image-wrapper" :style="{ '--delay': idx * 0.1 + 's' }">
+                    <img :src="img" alt="Project Preview">
                 </div>
             </div>
         </div>
@@ -41,11 +45,16 @@ const projects = ref([
         title: "Lawcrative",
         description: "A modern legal technology platform designed to streamline case management and client communication for law firms.",
         tags: ["Vue 3", "Expressjs", "MySQL"],
-        slug: "lawcrative"
+        slug: "lawcrative",
+        images: [
+            "/placeholder-lawcrative.png",
+            "https://placehold.co/600x400/111/9effed?text=Dashboard",
+            "https://placehold.co/600x400/111/9effed?text=Mobile"
+        ]
     }
 ]);
 
-const showScreenshot = ref(false);
+const hoveredProject = ref(null);
 const showCustomCursor = ref(false);
 const cursorX = ref(0);
 const cursorY = ref(0);
@@ -56,17 +65,17 @@ const navigateToProject = (project) => {
     }
 };
 
-const showText = () => {
-    showScreenshot.value = true;
+const showText = (project) => {
+    hoveredProject.value = project;
     showCustomCursor.value = true;
     // Dispatch event for your background particle system
     window.dispatchEvent(new CustomEvent("show_particle_text", {
-        detail: { text: "LAWCRATIVE", layout: 'bottom' }
+        detail: { text: project.title.toUpperCase(), layout: 'bottom' }
     }));
 };
 
 const hideText = () => {
-    showScreenshot.value = false;
+    hoveredProject.value = null;
     showCustomCursor.value = false;
     window.dispatchEvent(new Event("hide_particle_text"));
 };
@@ -184,45 +193,51 @@ onUnmounted(() => {
     z-index: 10;
 }
 
-/* THE UPDATED SCREENSHOT POSITIONING */
-.screenshot-preview {
-    position: absolute;
-    /* Move it above the card: 100% height + 20px gap */
-    bottom: calc(100% + 20px);
+.project-preview-overlay {
+    position: fixed;
+    top: 0;
     left: 0;
-
-    z-index: 20;
+    width: 100vw;
+    height: 100vh;
     pointer-events: none;
-
-    /* Visual styles */
-    background: rgba(0, 0, 0, 0.9);
-    border: 2px solid var(--primary-color);
-    border-radius: 12px;
-    padding: 0.5rem;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-
-    /* Animation */
-    transform-origin: bottom left;
-    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-@keyframes popIn {
-    0% {
-        opacity: 0;
-        transform: translateY(10px) scale(0.9);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+.preview-images {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    transform: translateY(-100px);
 }
 
-.screenshot-preview img {
+.preview-image-wrapper {
     width: 300px;
-    height: auto;
-    border-radius: 8px;
-    display: block;
+    height: 200px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid var(--primary-color);
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.4s ease forwards;
+    animation-delay: var(--delay);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: #000;
+}
+
+.preview-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@keyframes fadeUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .custom-cursor {
