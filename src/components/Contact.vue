@@ -43,6 +43,7 @@
 import { ref, reactive, onMounted, nextTick } from 'vue';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import emailjs from '@emailjs/browser';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -70,9 +71,33 @@ const submitForm = async () => {
     isSubmitting.value = true;
     submitStatus.value = null;
 
-    // Simulate API call
-    setTimeout(() => {
+    const serviceId = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateId = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || serviceId === 'your_service_id') {
+        console.error('EmailJS not configured. Please set VITE_EMAILJS_SERVICE_ID in .env');
+        submitStatus.value = {
+            type: 'error',
+            message: 'Email service not configured. Please contact the developer.'
+        };
         isSubmitting.value = false;
+        return;
+    }
+
+    try {
+        await emailjs.send(
+            serviceId,
+            templateId,
+            {
+                from_name: form.name,
+                from_email: form.email,
+                message: form.message,
+                to_name: 'Stefan' // Optional, depends on template
+            },
+            publicKey
+        );
+
         submitStatus.value = {
             type: 'success',
             message: 'Message sent successfully! I will get back to you soon.'
@@ -87,7 +112,16 @@ const submitForm = async () => {
         setTimeout(() => {
             submitStatus.value = null;
         }, 5000);
-    }, 1500);
+
+    } catch (error) {
+        console.error('EmailJS Error:', error);
+        submitStatus.value = {
+            type: 'error',
+            message: 'Failed to send message. Please try again later.'
+        };
+    } finally {
+        isSubmitting.value = false;
+    }
 };
 
 onMounted(async () => {
@@ -278,6 +312,12 @@ textarea.error {
     background: rgba(0, 255, 136, 0.1);
     color: #00ff88;
     border: 1px solid #00ff88;
+}
+
+.status-msg.error {
+    background: rgba(255, 68, 68, 0.1);
+    color: #ff4444;
+    border: 1px solid #ff4444;
 }
 
 @media (max-width: 768px) {
