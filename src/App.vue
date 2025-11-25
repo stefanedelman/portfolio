@@ -3,6 +3,7 @@ import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import ParticleBackground from './components/ParticleBackground.vue';
 import ScrollProgress from './components/ScrollProgress.vue';
+import Footer from './components/Footer.vue';
 import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -71,6 +72,7 @@ onMounted(() => {
     <main class="main-content">
         <router-view />
     </main>
+    <Footer />
 
     <button class="scroll-to-top" :class="{ 'visible': showScrollTop }" @click="scrollToTop" aria-label="Scroll to top">
         ↑
