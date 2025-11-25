@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, onUnmounted, ref } from 'vue';
+import { onMounted, onUnmounted, ref, watch, nextTick } from 'vue';
+import { useRoute } from 'vue-router';
 import ParticleBackground from './components/ParticleBackground.vue';
 import Lenis from 'lenis'
 import gsap from 'gsap'
@@ -7,6 +8,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
+const route = useRoute();
 const showScrollTop = ref(false);
 let lenis;
 
@@ -14,7 +16,22 @@ const scrollToTop = () => {
     lenis?.scrollTo(0);
 };
 
+watch(route, async () => {
+    if (lenis) {
+        lenis.stop();
+        // Force native scroll to top immediately
+        window.scrollTo(0, 0);
+        await nextTick();
+        lenis.scrollTo(0, { immediate: true });
+        lenis.start();
+    }
+});
+
 onMounted(() => {
+    if ('scrollRestoration' in history) {
+        history.scrollRestoration = 'manual';
+    }
+
     lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
