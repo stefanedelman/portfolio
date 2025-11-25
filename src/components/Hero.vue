@@ -27,7 +27,9 @@
         </div>
 
         <div class="hero-image">
-            <img src="/portrait.JPG" alt="Stefan Edelman">
+            <a href="https://linkedin.com/in/stefan-edelman" target="_blank" rel="noopener noreferrer">
+                <img src="/portrait.JPG" alt="Stefan Edelman">
+            </a>
         </div>
     </div>
 </template>
@@ -42,45 +44,90 @@ onMounted(async () => {
     await nextTick();
 
     const tl = gsap.timeline()
-    
-    tl.fromTo('.title-part', 
-        {
-            y: 100,
-            opacity: 0
-        },
-        {
-            y: 0,
-            opacity: 1,
-            duration: 1,
-            stagger: 0.2,
-            ease: 'power4.out'
-        }
-    )
-    .fromTo('.buttons button', 
-        {
-            y: 50,
-            opacity: 0
-        },
-        {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            stagger: 0.1,
-            ease: 'back.out(1.7)'
-        }, '-=0.5')
-    .fromTo('.hero-image', 
-        {
-            x: 100,
-            opacity: 0,
-            scale: 0.9
-        },
-        {
-            x: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 1.2,
-            ease: 'power3.out'
-        }, '-=0.8')
+    const isMobile = window.matchMedia("(max-width: 1280px)").matches;
+
+    if (isMobile) {
+        // Mobile Sequence: Image (Top) -> Text -> Buttons
+        tl.fromTo('.hero-image', 
+            {
+                y: 50,
+                opacity: 0,
+                scale: 0.9
+            },
+            {
+                y: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: 'power3.out'
+            }
+        )
+        .fromTo('.title-part', 
+            {
+                y: 50,
+                opacity: 0
+            },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power4.out'
+            }, '-=0.8'
+        )
+        .fromTo('.buttons button', 
+            {
+                y: 30,
+                opacity: 0
+            },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'back.out(1.7)'
+            }, '-=0.6')
+    } else {
+        // Desktop Sequence: Text -> Buttons -> Image (Side)
+        tl.fromTo('.title-part', 
+            {
+                y: 100,
+                opacity: 0
+            },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.2,
+                ease: 'power4.out'
+            }
+        )
+        .fromTo('.buttons button', 
+            {
+                y: 50,
+                opacity: 0
+            },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 0.8,
+                stagger: 0.1,
+                ease: 'back.out(1.7)'
+            }, '-=0.5')
+        .fromTo('.hero-image', 
+            {
+                x: 100,
+                opacity: 0,
+                scale: 0.9
+            },
+            {
+                x: 0,
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: 'power3.out'
+            }, '-=0.8')
+    }
 })
 
 watch(isHover, (newVal) => {
@@ -189,7 +236,7 @@ function scrollToSection(id) {
     box-shadow: 0 10px 30px rgba(158, 255, 237, 0.3);
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1280px) {
     .hero-wrapper {
         flex-direction: column-reverse;
         justify-content: center;
@@ -202,11 +249,20 @@ function scrollToSection(id) {
     }
 
     .hero-image img {
-        max-width: 300px;
+        max-width: 450px;
+        width: 80%;
     }
 
     .buttons {
         justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    .buttons .button1,
+    .buttons .button2 {
+        padding: 1.5rem 3rem;
+        font-size: 1.5rem;
     }
 }
+
 </style>

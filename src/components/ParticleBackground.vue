@@ -56,7 +56,8 @@ function initGrid() {
         vy: 0,
         // We now transition size and opacity independently
         currentSize: 0,
-        currentAlpha: 0
+        currentAlpha: 0,
+        textTarget: null
       });
     }
   }
@@ -102,7 +103,6 @@ onMounted(() => {
 
   // === TEXT MODE STATE ===
   let isTextMode = false;
-  let textTargets = []; // Array of {x, y}
 
   window.addEventListener('show_particle_text', (e) => {
     isTextMode = true;
@@ -112,6 +112,8 @@ onMounted(() => {
 
   window.addEventListener('hide_particle_text', () => {
     isTextMode = false;
+    // Reset targets so particles float back
+    particles.forEach(p => p.textTarget = null);
   });
 
   function calculateTextTargets(text, layout = 'bottom') {
@@ -148,7 +150,7 @@ onMounted(() => {
     }
 
     const imageData = offCtx.getImageData(0, 0, canvas.width, canvas.height).data;
-    textTargets = [];
+    const targets = [];
 
     // Scan for pixels (step by 6 to reduce density)
     const step = 6;
@@ -156,9 +158,51 @@ onMounted(() => {
       for (let x = 0; x < canvas.width; x += step) {
         const alpha = imageData[(y * canvas.width + x) * 4 + 3];
         if (alpha > 128) {
-          textTargets.push({ x, y });
+          targets.push({ x, y });
         }
       }
+    }
+
+    // Reset assignments
+    particles.forEach(p => p.textTarget = null);
+
+    if (layout === 'bottom') {
+      // For bottom layout (Lawcrative), user wants particles to come from the "top of the grid".
+      // We simply assign the first N particles (which are at the top) to the targets.
+      // This creates a "raining down" effect.
+      for (let i = 0; i < targets.length && i < particles.length; i++) {
+        particles[i].textTarget = targets[i];
+      }
+    } else {
+      // For sides layout (Tech Stack), use greedy proximity assignment.
+      // This ensures text on the left grabs left particles, and text on the right grabs right particles.
+      
+      // Use all particles as candidates
+      const candidatePool = particles;
+
+      // Greedy assignment: For each target, find closest available candidate
+      targets.forEach(target => {
+          let closestDist = Infinity;
+          let closestIdx = -1;
+
+          for (let i = 0; i < candidatePool.length; i++) {
+              const p = candidatePool[i];
+              if (p.textTarget) continue; // Already assigned
+
+              const dx = p.x - target.x;
+              const dy = p.y - target.y;
+              const distSq = dx * dx + dy * dy;
+
+              if (distSq < closestDist) {
+                  closestDist = distSq;
+                  closestIdx = i;
+              }
+          }
+
+          if (closestIdx !== -1) {
+              candidatePool[closestIdx].textTarget = target;
+          }
+      });
     }
   }
 
@@ -201,10 +245,10 @@ onMounted(() => {
       let tx, ty;
 
       // --- 1. PHYSICS (Standard vs Text Mode) ---
-      if (isTextMode && i < textTargets.length) {
+      if (isTextMode && p.textTarget) {
         // Move to text target
-        tx = textTargets[i].x;
-        ty = textTargets[i].y;
+        tx = p.textTarget.x;
+        ty = p.textTarget.y;
 
         // Add slight noise wiggle to text so it feels alive
         const nX = noise3D(tx * 0.01, ty * 0.01, time) * 2;
@@ -272,7 +316,7 @@ onMounted(() => {
       // --- 3. DETERMINE TARGETS based on State ---
       let targetSize, targetAlpha;
 
-      if (isTextMode && i < textTargets.length) {
+      if (isTextMode && p.textTarget) {
         // Text Mode: Bright and visible
         targetSize = baseSize * 1.5;
         targetAlpha = 1.0;
