@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Lawcrative from '../views/Lawcrative.vue'
+import NotFound from '../views/NotFound.vue'
 
 const routes = [
   {
@@ -19,6 +20,15 @@ const routes = [
     meta: {
       title: 'Lawcrative | Stefan Edelman',
       description: 'Lawcrative is a modern legal technology platform designed to streamline case management and client communication for law firms.'
+    }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound,
+    meta: {
+      title: '404 Not Found | Stefan Edelman',
+      description: 'The page you are looking for does not exist.'
     }
   }
 ]
