@@ -8,6 +8,9 @@
             <!-- Left Column: Scrollable Text -->
             <div class="text-column">
                 <div class="scroll-section" data-index="0" :class="{ active: currentImageIndex === 0 }">
+                    <div class="project-logo-container">
+                        <img src="/Lawcrative_Logo.png" alt="Lawcrative Logo" class="project-logo">
+                    </div>
                     <h1 class="project-title">Lawcrative</h1>
                     <div class="project-meta">
                         <span class="tag">Vue 3</span>
@@ -18,6 +21,12 @@
                         Lawcrative is a modern legal technology platform designed to streamline case management and client communication for law firms.
                         It provides a comprehensive suite of tools for lawyers to manage their practice efficiently.
                     </p>
+                    
+                    <div class="project-actions">
+                        <a href="https://www.lawcrative.com" target="_blank" rel="noopener noreferrer" class="visit-btn">
+                            Visit Live Site ↗
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="scroll-section" data-index="1" :class="{ active: currentImageIndex === 1 }">
@@ -56,11 +65,20 @@
                 <div class="image-wrapper">
                     <div v-for="(img, index) in images" :key="index" 
                          class="project-image"
-                         :class="{ active: currentImageIndex === index }">
-                        <img :src="img" :alt="`Project screenshot ${index + 1}`">
+                         :class="[{ active: currentImageIndex === index }, img.type]"
+                         @click="openLightbox(img.src)">
+                        <img :src="img.src" :alt="`Project screenshot ${index + 1}`">
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div v-if="lightboxOpen" class="lightbox" @click="closeLightbox">
+            <div class="lightbox-content">
+                <img :src="lightboxImage" alt="Full size preview">
+            </div>
+            <button class="close-btn" @click="closeLightbox">×</button>
         </div>
     </div>
 </template>
@@ -69,14 +87,27 @@
 import { ref, onMounted, onUnmounted, nextTick } from 'vue';
 
 const images = ref([
-    '/placeholder-lawcrative.png',
-    'https://placehold.co/600x400/111/9effed?text=Dashboard',
-    'https://placehold.co/600x400/111/9effed?text=Client+Portal',
-    'https://placehold.co/600x400/111/9effed?text=Mobile+View'
+    { src: '/dashboard.png', type: 'landscape' },
+    { src: '/Client Management.png', type: 'landscape' },
+    { src: '/Calendar customization.png', type: 'landscape' },
+    { src: '/Promo Mobile.jpg', type: 'portrait' }
 ]);
 
 const currentImageIndex = ref(0);
+const lightboxOpen = ref(false);
+const lightboxImage = ref('');
 let observer = null;
+
+const openLightbox = (src) => {
+    lightboxImage.value = src;
+    lightboxOpen.value = true;
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+};
+
+const closeLightbox = () => {
+    lightboxOpen.value = false;
+    document.body.style.overflow = ''; // Restore scrolling
+};
 
 onMounted(async () => {
     // Trigger particle text
@@ -179,6 +210,17 @@ onUnmounted(() => {
     opacity: 1;
 }
 
+.project-logo-container {
+    margin-bottom: 1.5rem;
+}
+
+.project-logo {
+    height: 100px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 12px;
+}
+
 .project-title {
     font-family: "Satoshi", sans-serif;
     font-size: 4rem;
@@ -200,6 +242,32 @@ onUnmounted(() => {
     padding: 0.25rem 0.75rem;
     border-radius: 50px;
     font-size: 0.9rem;
+}
+
+.project-actions {
+    margin-top: 2rem;
+}
+
+.visit-btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: rgba(158, 255, 237, 0.1);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    text-decoration: none;
+    border-radius: 50px;
+    font-family: "Satoshi", sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.visit-btn:hover {
+    background: var(--primary-color);
+    color: #000;
+    transform: translateY(-3px);
+    box-shadow: 0 0 20px rgba(158, 255, 237, 0.3);
 }
 
 .scroll-section h3 {
@@ -232,7 +300,6 @@ onUnmounted(() => {
 
 .project-image {
     position: absolute;
-    width: 100%;
     opacity: 0;
     transform: scale(0.95) translateY(20px);
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -240,6 +307,19 @@ onUnmounted(() => {
     overflow: hidden;
     box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     border: 1px solid rgba(255,255,255,0.1);
+    cursor: zoom-in;
+}
+
+.project-image.landscape {
+    width: 120%;
+    max-width: 1000px;
+    margin-left: 20px;
+}
+
+.project-image.portrait {
+    width: auto;
+    height: 80%; /* Make portrait images tall but not too wide */
+    max-height: 700px;
 }
 
 .project-image.active {
@@ -250,7 +330,8 @@ onUnmounted(() => {
 
 .project-image img {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
 }
 
@@ -278,5 +359,58 @@ onUnmounted(() => {
         margin-bottom: 4rem;
         opacity: 1;
     }
+}
+
+/* Lightbox Styles */
+.lightbox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+    animation: fadeIn 0.3s ease;
+}
+
+.lightbox-content {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.lightbox-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+.close-btn {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.close-btn:hover {
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 </style>

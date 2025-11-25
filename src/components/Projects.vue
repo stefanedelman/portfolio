@@ -13,6 +13,10 @@
                         <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
                     </div>
                 </div>
+                
+                <div v-if="project.logo" class="project-logo">
+                    <img :src="project.logo" :alt="project.title + ' Logo'">
+                </div>
             </div>
         </div>
 
@@ -46,10 +50,11 @@ const projects = ref([
         description: "A modern legal technology platform designed to streamline case management and client communication for law firms.",
         tags: ["Vue 3", "Expressjs", "MySQL"],
         slug: "lawcrative",
+        logo: "/Lawcrative_Logo.png",
         images: [
-            "/placeholder-lawcrative.png",
-            "https://placehold.co/600x400/111/9effed?text=Dashboard",
-            "https://placehold.co/600x400/111/9effed?text=Mobile"
+            "/dashboard.png",
+            "/Client Management.png",
+            "/Promo Mobile.jpg"
         ]
     }
 ]);
@@ -175,13 +180,19 @@ onUnmounted(() => {
     transition: all 0.3s ease;
     cursor: none;
     display: flex;
-    flex-direction: column;
+    flex-direction: row; /* Changed to row */
     justify-content: space-between;
+    align-items: flex-start; /* Align top */
     min-height: 250px;
 
     /* Critical for absolute positioning the screenshot */
     position: relative;
     z-index: 1;
+}
+
+.card-content {
+    flex: 1;
+    padding-right: 2rem;
 }
 
 /* Ensure the hovered card is on top of siblings so the popup isn't hidden */
@@ -194,11 +205,11 @@ onUnmounted(() => {
 }
 
 .project-preview-overlay {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
     z-index: 100;
     display: flex;
@@ -210,7 +221,7 @@ onUnmounted(() => {
     display: flex;
     gap: 2rem;
     align-items: center;
-    transform: translateY(-100px);
+    transform: translateY(-200px);
 }
 
 .preview-image-wrapper {
@@ -256,6 +267,22 @@ onUnmounted(() => {
     white-space: nowrap;
 }
 
+.project-logo {
+    flex-shrink: 0;
+    margin-left: 1rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.project-logo img {
+    height: 220px; /* Significantly increased size */
+    width: auto;
+    object-fit: contain;
+    border-radius: 16px;
+    /* filter: brightness(0) invert(1); Removed filter in case logo is already correct color */
+}
+
 .project-title {
     font-family: "Satoshi", sans-serif;
     font-size: 1.5rem;
@@ -267,8 +294,8 @@ onUnmounted(() => {
 .project-desc {
     font-family: "Satoshi", sans-serif;
     color: #ccc;
-    font-size: 1rem;
-    line-height: 1.5;
+    font-size: 1.2rem;
+    line-height: 1.6;
     margin-bottom: 1.5rem;
 }
 
@@ -280,10 +307,10 @@ onUnmounted(() => {
 
 .tag {
     font-family: "Satoshi", sans-serif;
-    font-size: 0.8rem;
+    font-size: 1rem;
     color: var(--primary-color);
     border: 1px solid var(--primary-color);
-    padding: 0.25rem 0.75rem;
+    padding: 0.4rem 1rem;
     border-radius: 50px;
     background: rgba(0, 0, 0, 0.2);
 }

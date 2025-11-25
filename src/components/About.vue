@@ -5,7 +5,7 @@
             <div class="about-content">
                 <div class="text-column">
                     <div class="profile-photo">
-                        <img src="/placeholder-profile.png" alt="Stefan Edelman">
+                        <img src="/portrait.JPG" alt="Stefan Edelman">
                     </div>
                     <p class="bio">
                         Hello! I'm Stefan, a passionate software developer with a knack for creating immersive digital

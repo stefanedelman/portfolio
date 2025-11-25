@@ -242,20 +242,23 @@ textarea.error {
 .submit-btn {
     margin-top: 1rem;
     padding: 1rem;
-    background: var(--primary-color);
-    color: #000;
-    border: none;
-    border-radius: 12px;
+    background: rgba(158, 255, 237, 0.1);
+    color: var(--primary-color);
+    border: 1px solid var(--primary-color);
+    border-radius: 50px;
     font-family: "Satoshi", sans-serif;
     font-weight: 700;
     font-size: 1.1rem;
     cursor: pointer;
     transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
 }
 
 .submit-btn:hover:not(:disabled) {
+    background: var(--primary-color);
+    color: #000;
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(var(--primary-rgb), 0.3);
+    box-shadow: 0 0 20px rgba(158, 255, 237, 0.3);
 }
 
 .submit-btn:disabled {

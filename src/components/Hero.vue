@@ -1,27 +1,33 @@
 <template>
     <div class="hero-wrapper">
-        <div class="title">
-            <div class="title-part">
-                STEFAN
+        <div class="hero-content">
+            <div class="title">
+                <div class="title-part">
+                    STEFAN
+                </div>
+                <div class="title-part">
+                    EDELMAN
+                </div>
+                <div class="title-part" style="margin-top: 6rem;">
+                    SOFTWARE ENGINEER
+                </div>
             </div>
-            <div class="title-part">
-                EDELMAN
-            </div>
-            <div class="title-part" style="margin-top: 6rem;">
-                SOFTWARE ENGINEER
+
+            <div class="buttons">
+                <button class="button1" @mouseover="isHover = true" @mouseleave="isHover = false"
+                    @click="scrollToSection('projects')">
+                    View Projects
+                </button>
+
+                <button class="button2" @mouseover="isHover = true" @mouseleave="isHover = false"
+                    @click="scrollToSection('contact')">
+                    Contact Me
+                </button>
             </div>
         </div>
 
-        <div class="buttons">
-            <button class="button1" @mouseover="isHover = true" @mouseleave="isHover = false"
-                @click="scrollToSection('projects')">
-                View Projects
-            </button>
-
-            <button class="button2" @mouseover="isHover = true" @mouseleave="isHover = false"
-                @click="scrollToSection('contact')">
-                Contact Me
-            </button>
+        <div class="hero-image">
+            <img src="/portrait.JPG" alt="Stefan Edelman">
         </div>
     </div>
 </template>
@@ -62,6 +68,19 @@ onMounted(async () => {
             stagger: 0.1,
             ease: 'back.out(1.7)'
         }, '-=0.5')
+    .fromTo('.hero-image', 
+        {
+            x: 100,
+            opacity: 0,
+            scale: 0.9
+        },
+        {
+            x: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 1.2,
+            ease: 'power3.out'
+        }, '-=0.8')
 })
 
 watch(isHover, (newVal) => {
@@ -89,8 +108,42 @@ function scrollToSection(id) {
 }
 
 .hero-wrapper {
-    margin-left: 4rem;
-    margin-top: 15rem;
+    padding: 0 4rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4rem;
+}
+
+.hero-content {
+    flex: 1;
+    z-index: 2;
+}
+
+.hero-image {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border: 1px solid rgba(158, 255, 237, 0.2);
+    transition: all 0.5s ease;
+    object-fit: cover;
+}
+
+.hero-image img:hover {
+    transform: scale(1.02) rotate(2deg);
+    border-color: var(--primary-color);
+    box-shadow: 0 30px 60px rgba(158, 255, 237, 0.1);
 }
 
 .title {
@@ -98,54 +151,62 @@ function scrollToSection(id) {
     display: flex;
     flex-direction: column;
     font-weight: 700;
-    /* super bold */
-    line-height: 1.2;
-
+    line-height: 1.1;
 }
 
 .title-part {
-    font-size: clamp(3rem, 12vw, 8rem);
+    font-size: clamp(3rem, 8vw, 7rem);
     color: var(--primary-color);
 }
 
 .buttons {
     display: flex;
-    width: 50%;
-    justify-content: space-around;
     gap: 2rem;
-    margin-top: 7rem;
+    margin-top: 4rem;
 }
 
 .buttons .button1,
 .buttons .button2 {
-    padding: 60px 70px;
-    background-color: rgba(0, 0, 0, 0);
-    outline: none;
-    border: 1px var(--primary-color);
-    border-radius: 10px;
-    color: var(--primary-color);
-    font-size: 50px;
-}
-
-.buttons .button1,
-.buttons .button2 {
-    background: rgba(255, 255, 255, 0);
+    padding: 2rem 4rem;
+    background: rgba(255, 255, 255, 0.03);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(3.7px);
-    -webkit-backdrop-filter: blur(3.7px);
-    border: 1px dashed var(--primary-color);
-    transition: all 0.25s ease;
-
-
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    font-size: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
 }
-
 
 .buttons .button1:hover,
 .buttons .button2:hover {
     background: var(--primary-color);
-    color: black;
-    box-shadow: 0 0 20px var(--primary-color);
-    border-color: var(--primary-color);
+    color: #000;
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(158, 255, 237, 0.3);
+}
+
+@media (max-width: 1024px) {
+    .hero-wrapper {
+        flex-direction: column-reverse;
+        justify-content: center;
+        text-align: center;
+        padding-top: 100px;
+    }
+
+    .hero-image {
+        margin-bottom: 2rem;
+    }
+
+    .hero-image img {
+        max-width: 300px;
+    }
+
+    .buttons {
+        justify-content: center;
+    }
 }
 </style>
