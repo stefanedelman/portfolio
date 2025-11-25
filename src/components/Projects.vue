@@ -12,6 +12,9 @@
                     <div class="tags">
                         <span v-for="tag in project.tags" :key="tag" class="tag">{{ tag }}</span>
                     </div>
+                    <div class="mobile-cta">
+                        View Project <span>→</span>
+                    </div>
                 </div>
                 
                 <div v-if="project.logo" class="project-logo">
@@ -317,15 +320,32 @@ onUnmounted(() => {
     background: rgba(0, 0, 0, 0.2);
 }
 
+.mobile-cta {
+    display: none;
+    margin-top: 1.5rem;
+    color: var(--primary-color);
+    font-family: "Satoshi", sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    align-items: center;
+    gap: 0.5rem;
+}
+
 @media (max-width: 768px) {
     .projects-container {
         padding: 4rem 1rem;
+    }
+
+    .project-preview-overlay,
+    .custom-cursor {
+        display: none !important;
     }
 
     .project-card {
         flex-direction: column-reverse;
         align-items: center;
         padding: 1.5rem;
+        cursor: pointer;
     }
 
     .card-content {
@@ -351,6 +371,10 @@ onUnmounted(() => {
     
     .section-title {
         margin-bottom: 4rem; /* Increase spacing on mobile */
+    }
+
+    .mobile-cta {
+        display: flex;
     }
 }
 
