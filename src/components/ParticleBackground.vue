@@ -177,32 +177,32 @@ onMounted(() => {
     } else {
       // For sides layout (Tech Stack), use greedy proximity assignment.
       // This ensures text on the left grabs left particles, and text on the right grabs right particles.
-      
+
       // Use all particles as candidates
       const candidatePool = particles;
 
       // Greedy assignment: For each target, find closest available candidate
       targets.forEach(target => {
-          let closestDist = Infinity;
-          let closestIdx = -1;
+        let closestDist = Infinity;
+        let closestIdx = -1;
 
-          for (let i = 0; i < candidatePool.length; i++) {
-              const p = candidatePool[i];
-              if (p.textTarget) continue; // Already assigned
+        for (let i = 0; i < candidatePool.length; i++) {
+          const p = candidatePool[i];
+          if (p.textTarget) continue; // Already assigned
 
-              const dx = p.x - target.x;
-              const dy = p.y - target.y;
-              const distSq = dx * dx + dy * dy;
+          const dx = p.x - target.x;
+          const dy = p.y - target.y;
+          const distSq = dx * dx + dy * dy;
 
-              if (distSq < closestDist) {
-                  closestDist = distSq;
-                  closestIdx = i;
-              }
+          if (distSq < closestDist) {
+            closestDist = distSq;
+            closestIdx = i;
           }
+        }
 
-          if (closestIdx !== -1) {
-              candidatePool[closestIdx].textTarget = target;
-          }
+        if (closestIdx !== -1) {
+          candidatePool[closestIdx].textTarget = target;
+        }
       });
     }
   }
@@ -336,14 +336,14 @@ onMounted(() => {
 
         // Twinkle Logic (Randomly brighten particles to simulate life, especially on mobile)
         if (p.twinkleTimer > 0) {
-            p.twinkleTimer--;
-            targetAlpha = brightAlpha; 
-            targetSize = baseSize * 0.8; // Slightly larger than normal outside state
+          p.twinkleTimer--;
+          targetAlpha = brightAlpha;
+          targetSize = baseSize * 0.8; // Slightly larger than normal outside state
         } else {
-            // Random chance to start twinkling (approx 1 in 2000 per frame)
-            if (Math.random() < 0.0005) { 
-                p.twinkleTimer = Math.random() * 60 + 30; // 0.5 to 1.5 seconds
-            }
+          // Random chance to start twinkling (approx 1 in 2000 per frame)
+          if (Math.random() < 0.0005) {
+            p.twinkleTimer = Math.random() * 60 + 30; // 0.5 to 1.5 seconds
+          }
         }
       }
 
@@ -381,12 +381,6 @@ onBeforeUnmount(() => cancelAnimationFrame(animationId));
 </script>
 
 <style scoped>
-html,
-body {
-  background: #111;
-  margin: 0;
-}
-
 canvas {
   display: block;
 }
