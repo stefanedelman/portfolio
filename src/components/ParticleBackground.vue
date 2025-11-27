@@ -7,7 +7,7 @@ import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { createNoise3D } from "simplex-noise";
 
 // ===== STATE =====
-const gridSpacing = ref(25);
+const gridSpacing = ref(30);
 const mouseRadius = ref(180);
 const spring = ref(2);
 const friction = ref(80);
@@ -140,7 +140,7 @@ onMounted(() => {
     offCtx.textBaseline = "middle";
 
     if (layout === 'bottom') {
-      offCtx.font = "900 150px Satoshi";
+      offCtx.font = "900 130px Satoshi";
       offCtx.fillText(text, canvas.width / 2, canvas.height - 150);
     } else if (layout === 'top') {
       offCtx.font = "900 150px Satoshi";
