@@ -215,6 +215,7 @@ function scrollToSection(id) {
     display: flex;
     gap: 2rem;
     margin-top: 4rem;
+    flex-wrap: wrap;
 }
 
 .buttons .button1,
@@ -245,6 +246,19 @@ function scrollToSection(id) {
     box-shadow: 0 10px 30px rgba(158, 255, 237, 0.3);
 }
 
+@media (max-width: 1600px) {
+    .hero-wrapper {
+        padding: 0 2rem;
+        gap: 2rem;
+    }
+
+    .buttons .button1,
+    .buttons .button2 {
+        padding: 1.5rem 2.5rem;
+        font-size: 1.5rem;
+    }
+}
+
 @media (max-width: 1280px) {
     .hero-wrapper {
         flex-direction: column-reverse;
@@ -271,6 +285,23 @@ function scrollToSection(id) {
     .buttons .button2 {
         padding: 1.5rem 3rem;
         font-size: 1.5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .buttons {
+        gap: 1rem;
+        margin-top: 2rem;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .buttons .button1,
+    .buttons .button2 {
+        padding: 2rem 2rem;
+        font-size: 1.1rem;
+        width: 100%;
+        max-width: 350px;
     }
 }
 </style>

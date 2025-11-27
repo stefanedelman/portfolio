@@ -74,7 +74,7 @@ onMounted(async () => {
             scrollTrigger: {
                 trigger: containerRef.value,
                 start: "top top", // Pin when top hits top
-                end: () => `+=${Math.abs(getScrollAmount())}`,
+                end: () => `+=${Math.abs(getScrollAmount()) * 0.6}`,
                 pin: true,
                 scrub: 1,
                 invalidateOnRefresh: true,
@@ -230,19 +230,14 @@ onUnmounted(() => {
     }
 
     .track-scroll-wrapper {
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        padding-bottom: 1rem;
-        scrollbar-width: none; /* Firefox */
-    }
-
-    .track-scroll-wrapper::-webkit-scrollbar {
-        display: none; /* Chrome/Safari */
+        overflow: visible;
+        padding-bottom: 0;
     }
        
     .skill-card {
-        width: 160px;
-        height: 160px;
+        width: 100%;
+        height: auto;
+        aspect-ratio: 1;
         padding: 1rem;
         gap: 1rem;
     }
@@ -257,9 +252,11 @@ onUnmounted(() => {
     }
     
     .skills-track {
-        gap: 1.5rem;
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        padding: 0 1.5rem;
+        width: 100%;
     }
 
     .section-title {
