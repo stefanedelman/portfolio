@@ -68,15 +68,6 @@
                         </a>
                     </div>
                 </div>
-                <div class="skills-column">
-                    <h3 class="skills-title">Tech Stack</h3>
-                    <ul class="skills-list">
-                        <li v-for="skill in skills" :key="skill" @mouseenter="showSkillText(skill)"
-                            @mouseleave="hideSkillText">
-                            {{ skill }}
-                        </li>
-                    </ul>
-                </div>
             </div>
         </div>
     </div>
@@ -89,19 +80,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const skills = ref([
-    "Vue.js",
-    "Node / ExpressJS",
-    "Python",
-    "Flask",
-    "JavaScript",
-    "HTML5 & CSS3",
-    "MySQL",
-    "Git & CI/CD",
-    "PHP & Laravel",
-    "C# & .NET"
-]);
-
 const isHover = ref(false)
 
 watch(isHover, (newVal) => {
@@ -113,16 +91,6 @@ watch(isHover, (newVal) => {
 
     }
 })
-
-const showSkillText = (text) => {
-    window.dispatchEvent(new CustomEvent("show_particle_text", {
-        detail: { text: text, layout: 'sides' }
-    }));
-};
-
-const hideSkillText = () => {
-    window.dispatchEvent(new Event("hide_particle_text"));
-};
 
 onMounted(async () => {
     await nextTick();
@@ -179,24 +147,6 @@ onMounted(async () => {
             ease: 'power3.out'
         }
     );
-
-    gsap.fromTo('.skills-column',
-        {
-            x: 50,
-            opacity: 0
-        },
-        {
-            scrollTrigger: {
-                trigger: '.about-content',
-                start: 'top 85%',
-            },
-            x: 0,
-            opacity: 1,
-            duration: 1,
-            delay: 0.4,
-            ease: 'power3.out'
-        }
-    );
 });
 </script>
 
@@ -233,9 +183,22 @@ onMounted(async () => {
 }
 
 .about-content {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 4rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.text-column {
+    color: #ccc;
+    font-family: 'Satoshi', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .profile-photo {
@@ -304,52 +267,7 @@ onMounted(async () => {
     transform: translateX(3px);
 }
 
-.skills-title {
-    font-family: "Satoshi", sans-serif;
-    font-size: 1.5rem;
-    color: #fff;
-    margin-bottom: 1.5rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.skills-list {
-    list-style: none;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 1rem;
-}
-
-.skills-list li {
-    font-family: "Satoshi", sans-serif;
-    color: var(--primary-color);
-    border: 1px solid rgba(var(--primary-rgb), 0.3);
-    /* Fallback if var not defined */
-    border: 1px solid var(--primary-color);
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    text-align: center;
-    font-size: 0.9rem;
-    background: rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.skills-list li:hover {
-    background: var(--primary-color);
-    color: #000;
-    transform: translateY(-2px);
-}
-
 @media (max-width: 768px) {
-    .about-content {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-
     .about-container {
         padding: 4rem 1rem;
     }

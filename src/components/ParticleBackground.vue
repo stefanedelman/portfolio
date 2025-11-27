@@ -142,6 +142,9 @@ onMounted(() => {
     if (layout === 'bottom') {
       offCtx.font = "900 150px Satoshi";
       offCtx.fillText(text, canvas.width / 2, canvas.height - 150);
+    } else if (layout === 'top') {
+      offCtx.font = "900 150px Satoshi";
+      offCtx.fillText(text, canvas.width / 2, 150);
     } else if (layout === 'sides') {
       // Render on Left and Right sides
       // Use smaller font to fit
@@ -179,8 +182,8 @@ onMounted(() => {
     // Reset assignments
     particles.forEach(p => p.textTarget = null);
 
-    if (layout === 'bottom') {
-      // For bottom layout (Lawcrative), user wants particles to come from the "top of the grid".
+    if (layout === 'bottom' || layout === 'top') {
+      // For bottom/top layout, user wants particles to come from the "top/bottom of the grid".
       // We simply assign the first N particles (which are at the top) to the targets.
       // This creates a "raining down" effect.
       for (let i = 0; i < targets.length && i < particles.length; i++) {
@@ -262,12 +265,6 @@ onMounted(() => {
         // Move to text target
         tx = p.textTarget.x;
         ty = p.textTarget.y;
-
-        // Add slight noise wiggle to text so it feels alive
-        const nX = noise3D(tx * 0.01, ty * 0.01, time) * 2;
-        const nY = noise3D(tx * 0.01 + 500, ty * 0.01 + 500, time) * 2;
-        tx += nX;
-        ty += nY;
 
       } else {
         // Standard noise movement
