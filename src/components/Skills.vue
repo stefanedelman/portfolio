@@ -116,6 +116,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+    clearTimeout(debounceTimer);
     mm.revert(); // Clean up matchMedia
 });
 </script>

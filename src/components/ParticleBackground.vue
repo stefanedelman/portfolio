@@ -29,23 +29,6 @@ watch(gridSpacing, () => initGrid());
 
 let lastWidth = 0;
 
-window.addEventListener('resize', () => {
-  if (canvasEl.value) {
-    // On mobile, scrolling hides/shows address bar which triggers resize.
-    // We only want to re-init grid if width changes (orientation change or desktop resize)
-    const newWidth = window.innerWidth;
-    if (newWidth !== lastWidth) {
-      lastWidth = newWidth;
-      canvasEl.value.width = window.innerWidth;
-      canvasEl.value.height = window.innerHeight;
-      initGrid();
-    } else {
-      // Just update height without destroying particles
-      canvasEl.value.height = window.innerHeight;
-    }
-  }
-});
-
 function initGrid() {
   if (!canvasEl.value) return;
   particles = [];
@@ -92,15 +75,50 @@ function drawCircle(ctx, x, y, size) {
 }
 
 onMounted(() => {
-  // === EVENT LISTENERS ===
-  window.addEventListener('excite_particles', () => {
+  // === EVENT HANDLERS ===
+  const onExcite = () => {
     noiseStrength.value *= 10
     colorRingRadius.value /= 1.3
-  })
-  window.addEventListener('normalize_particles', () => {
+  }
+  const onNormalize = () => {
     noiseStrength.value /= 10
     colorRingRadius.value *= 1.3
-  })
+  }
+  const onShowText = (e) => {
+    isTextMode = true;
+    const { text, layout } = e.detail;
+    calculateTextTargets(text, layout);
+  }
+  const onHideText = () => {
+    isTextMode = false;
+    particles.forEach(p => p.textTarget = null);
+  }
+  const onMouseMove = (e) => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  }
+  const onResize = () => {
+    if (canvasEl.value) {
+      const newWidth = window.innerWidth;
+      if (newWidth !== lastWidth) {
+        lastWidth = newWidth;
+        canvasEl.value.width = window.innerWidth;
+        canvasEl.value.height = window.innerHeight;
+        gridSpacing.value = window.innerWidth < 768 ? 38 : 30;
+        initGrid();
+      } else {
+        canvasEl.value.height = window.innerHeight;
+      }
+    }
+  }
+
+  // === ADD LISTENERS ===
+  window.addEventListener('excite_particles', onExcite)
+  window.addEventListener('normalize_particles', onNormalize)
+  window.addEventListener('show_particle_text', onShowText)
+  window.addEventListener('hide_particle_text', onHideText)
+  window.addEventListener("mousemove", onMouseMove)
+  window.addEventListener('resize', onResize)
 
   const canvas = canvasEl.value;
   const ctx = canvas.getContext("2d", { alpha: false });
@@ -116,18 +134,6 @@ onMounted(() => {
 
   // === TEXT MODE STATE ===
   let isTextMode = false;
-
-  window.addEventListener('show_particle_text', (e) => {
-    isTextMode = true;
-    const { text, layout } = e.detail;
-    calculateTextTargets(text, layout);
-  });
-
-  window.addEventListener('hide_particle_text', () => {
-    isTextMode = false;
-    // Reset targets so particles float back
-    particles.forEach(p => p.textTarget = null);
-  });
 
   function calculateTextTargets(text, layout = 'bottom') {
     const offCanvas = document.createElement('canvas');
@@ -223,10 +229,6 @@ onMounted(() => {
   }
 
   const mouse = { x: -999, y: -999 };
-  window.addEventListener("mousemove", (e) => {
-    mouse.x = e.clientX;
-    mouse.y = e.clientY;
-  });
 
   function animate() {
     // Use a slightly transparent clear to create very subtle trails
@@ -384,9 +386,18 @@ onMounted(() => {
   }
 
   animate();
-});
 
-onBeforeUnmount(() => cancelAnimationFrame(animationId));
+  // === CLEANUP ===
+  onBeforeUnmount(() => {
+    cancelAnimationFrame(animationId)
+    window.removeEventListener('excite_particles', onExcite)
+    window.removeEventListener('normalize_particles', onNormalize)
+    window.removeEventListener('show_particle_text', onShowText)
+    window.removeEventListener('hide_particle_text', onHideText)
+    window.removeEventListener("mousemove", onMouseMove)
+    window.removeEventListener('resize', onResize)
+  })
+});
 </script>
 
 <style scoped>
