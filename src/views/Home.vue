@@ -9,7 +9,7 @@ import Contact from '../components/Contact.vue';
 <template>
     <Hero class="hero" />
     <About />
-    <Skills />
     <Projects id="projects" />
+    <Skills />
     <Contact id="contact" />
 </template>

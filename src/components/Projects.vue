@@ -3,7 +3,7 @@
         <h2 class="section-title">Selected Works</h2>
 
         <div class="projects-grid">
-            <div v-for="(project, index) in projects" :key="index" class="project-card" @mouseenter="showText(project)"
+            <div v-for="(project, index) in projects" :key="index" class="project-card" :class="{ 'has-screenshot': !project.logo && project.images?.length }" @mouseenter="showText(project)"
                 @mouseleave="hideText" @click="navigateToProject(project)">
 
                 <div class="card-content">
@@ -20,13 +20,16 @@
                 <div v-if="project.logo" class="project-logo">
                     <img :src="project.logo" :alt="project.title + ' Logo'">
                 </div>
-            </div>
-        </div>
+                <div v-else-if="project.images?.length" class="project-logo project-screenshot">
+                    <img :src="project.images[0]" :alt="project.title + ' screenshot'">
+                </div>
 
-        <div v-if="hoveredProject && hoveredProject.images" class="project-preview-overlay">
-            <div class="preview-images">
-                <div v-for="(img, idx) in hoveredProject.images.slice(0, 3)" :key="idx" class="preview-image-wrapper" :style="{ '--delay': idx * 0.1 + 's' }">
-                    <img :src="img" alt="Project Preview">
+                <div v-if="hoveredProject === project && project.images" class="project-row-preview">
+                    <div class="preview-images">
+                        <div v-for="(img, idx) in project.images.slice(0, 3)" :key="idx" class="preview-image-wrapper" :style="{ '--delay': idx * 0.1 + 's' }">
+                            <img :src="img" alt="Project Preview">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -51,13 +54,24 @@ const projects = ref([
     {
         title: "Lawcrative",
         description: "A modern legal technology platform designed to streamline case management and client communication for law firms.",
-        tags: ["Vue 3", "Expressjs", "MySQL"],
+        tags: ["Vue 3", "Express", "MySQL"],
         slug: "lawcrative",
         logo: "/Lawcrative_Logo.png",
         images: [
             "/dashboard.png",
             "/Client Management.png",
             "/Promo Mobile.jpg"
+        ]
+    },
+    {
+        title: "Cirilio",
+        description: "A Serbian learning app with 100+ user signups, spaced repetition, Cyrillic support, lessons, reviews, subscriptions, and editor tools.",
+        tags: ["Vue 3", "TypeScript", "Express", "Supabase", "Prisma"],
+        slug: "cirilio",
+        images: [
+            "/cirilio-dashboard.png",
+            "/cirilio-lesson.png",
+            "/cirilio-shop.png"
         ]
     }
 ]);
@@ -168,9 +182,8 @@ onUnmounted(() => {
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 4rem;
-    /* Increased gap slightly to make room for hover effects */
+    grid-template-columns: 1fr;
+    gap: 2rem;
     width: 100%;
 }
 
@@ -209,24 +222,19 @@ onUnmounted(() => {
     z-index: 10;
 }
 
-.project-preview-overlay {
+.project-row-preview {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    left: 50%;
+    bottom: calc(100% + 1.5rem);
     pointer-events: none;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 12;
+    transform: translateX(-50%);
 }
 
 .preview-images {
     display: flex;
     gap: 2rem;
     align-items: center;
-    transform: translateY(-200px);
 }
 
 .preview-image-wrapper {
@@ -288,6 +296,28 @@ onUnmounted(() => {
     /* filter: brightness(0) invert(1); Removed filter in case logo is already correct color */
 }
 
+.project-logo.project-screenshot img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border: 1px solid rgba(158, 255, 237, 0.22);
+}
+
+.project-card.has-screenshot {
+    flex-direction: row;
+    align-items: center;
+}
+
+.project-card.has-screenshot .card-content {
+    padding-right: 2rem;
+}
+
+.project-card.has-screenshot .project-logo {
+    width: min(42%, 420px);
+    margin: 0 0 0 1rem;
+}
+
 .project-title {
     font-family: "Satoshi", sans-serif;
     font-size: 1.5rem;
@@ -336,7 +366,7 @@ onUnmounted(() => {
         padding: 4rem 1rem;
     }
 
-    .project-preview-overlay,
+    .project-row-preview,
     .custom-cursor {
         display: none !important;
     }

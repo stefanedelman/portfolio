@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Lawcrative from '../views/Lawcrative.vue'
+import Cirilio from '../views/Cirilio.vue'
 import NotFound from '../views/NotFound.vue'
 
 const routes = [
@@ -20,6 +21,15 @@ const routes = [
     meta: {
       title: 'Lawcrative | Stefan Edelman',
       description: 'Lawcrative is a modern legal technology platform designed to streamline case management and client communication for law firms.'
+    }
+  },
+  {
+    path: '/project/cirilio',
+    name: 'Cirilio',
+    component: Cirilio,
+    meta: {
+      title: 'Cirilio | Stefan Edelman',
+      description: 'Cirilio is a Serbian language learning app with spaced repetition, Cyrillic support, lessons, reviews, subscriptions, and editor workflows.'
     }
   },
   {
