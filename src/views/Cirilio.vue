@@ -18,7 +18,7 @@
                     <p>
                         Cirilio is a Serbian language learning app built around spaced repetition, Cyrillic support,
                         guided lessons, daily reviews, subscriptions, rewards, and content editing tools. The app has
-                        already seen 100+ user signups.
+                        already seen 800+ user signups.
                     </p>
 
                     <div class="project-actions">
@@ -60,7 +60,8 @@
                     <h3>Key Features</h3>
                     <ul>
                         <li>Spaced repetition reviews for Serbian vocabulary</li>
-                        <li>100+ user signups</li>
+                        <li>800+ user signups</li>
+                        <li>$300+ in revenue</li>
                         <li>Latin and Cyrillic learning paths</li>
                         <li>Lesson, review, leaderboard, shop, and rewards systems</li>
                         <li>Editor tools for managing learning content</li>

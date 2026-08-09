@@ -65,7 +65,7 @@ const projects = ref([
     },
     {
         title: "Cirilio",
-        description: "A Serbian learning app with 100+ user signups, spaced repetition, Cyrillic support, lessons, reviews, subscriptions, and editor tools.",
+        description: "A Serbian learning app with 800+ user signups, $300+ in revenue, spaced repetition, Cyrillic support, lessons, reviews, subscriptions, and editor tools.",
         tags: ["Vue 3", "TypeScript", "Express", "Supabase", "Prisma"],
         slug: "cirilio",
         images: [
